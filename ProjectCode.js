@@ -214,16 +214,26 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
     prayerID.includes('Date=0000') ? date = 'Date=0000' : date = "Date=" + copticReadingsDate;
     let idsArray = [], text, el, lang;
     idsArray.push(prayerID + date + 'Title', prayerID + date);
-    idsArray.map(id => {
+    //idsArray.map(id => retrieve(id))
+    retrieve(idsArray);
+    function retrieve(idsArray) {
+        let firstElement;
         for (let i = 0; i < prayersArray.length; i++) {
-            if (prayersArray[i][0] == id) {
+            firstElement = prayersArray[i][0];
+            if (firstElement == idsArray[0] || firstElement == idsArray[1]) {
                 for (let x = 0; x < prayersArray[i].length; x++) {
+                    if (firstElement.includes('Title')) {
+                        el = document.createElement('div');
+                        el.classList.add('Title');
+                    }
+                    else {
+                        el = document.createElement('p');
+                        el.classList.add('PrayerText');
+                    }
                     lang = languages[x];
                     text = prayersArray[i][x + 1];
-                    id.includes('Title') ? el = document.createElement('div') : el = document.createElement('p');
-                    el.innerText = text;
                     el.classList.add(lang);
-                    id.includes('Title') ? el.classList.add('Title') : el.classList.add('PrayerText');
+                    el.innerText = text;
                     if (document.getElementById(mainDiv.id + lang)) {
                         document.getElementById(mainDiv.id + lang).appendChild(el);
                     }
@@ -234,7 +244,8 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
                 }
             }
         }
-    });
+    }
+    ;
 }
 ;
 //Depricated - it was used when we were retrieving the text from hidden html elements
