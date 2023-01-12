@@ -96,12 +96,6 @@ const btnMassRoshoumat = {
     rootID: 'Roshoumat',
     text: { FR: "Roshoumat El Hamal", AR: "رشومات الحمل" }
 };
-const btnMassReadings = {
-    rootID: '',
-    text: { FR: "Lectures",
-        AR: "القراءات" },
-    prayers: [Readings.StPaul, Readings.Katholikon, Readings.Praxis, Readings.Synaxarium, Readings.GospelMass]
-};
 const btnMassUnBaptised = {
     rootID: 'UnBaptised',
     text: { FR: "Messe des non baptisés",
@@ -119,6 +113,21 @@ const btnMassBaptised = {
 const btnFractionPrayers = {
     text: { FR: "Fraction",
         AR: "صلوات القسمة" },
+};
+const btnMassReadings = {
+    rootID: '',
+    text: { FR: "Lectures",
+        AR: "القراءات" },
+    prayers: [Readings.StPaul, Readings.Katholikon, Readings.Praxis, Readings.Synaxarium, Readings.GospelMass]
+};
+const btnDayReadings = {
+    text: { FR: "Lectures du jour",
+        AR: "قراءات اليوم",
+        EN: 'Day\'s Readings'
+    },
+    //prayers: [Readings.StPaul],
+    //prayersArray:ReadingsArray,
+    //languages: readingsLanguages,
 };
 const btnReadingsStPaul = {
     text: { FR: "Epître de Saint Paul",
@@ -166,7 +175,7 @@ const btnReadingsGospelMass = {
     parentBtn: btnMassReadings,
 };
 const btnReadingsGospelIncenseVespers = {
-    text: { FR: "l'Evangile",
+    text: { FR: "Evangile  Vêpres",
         AR: "إنجيل عشية"
     },
     prayers: [Readings.GospelVespers + Readings.Psalm, Readings.GospelVespers],
@@ -175,13 +184,22 @@ const btnReadingsGospelIncenseVespers = {
     parentBtn: btnIncenseVespers
 };
 const btnReadingsGospelIncenseDawn = {
-    text: { FR: "l'Evangile",
+    text: { FR: "Evangile Aube",
         AR: "إنجيل باكر"
     },
     prayers: [Readings.GospelDawn + Readings.Psalm, Readings.GospelDawn],
     prayersArray: ReadingsArray,
     languages: readingsLanguages,
     parentBtn: btnIncenseDawn
+};
+const btnReadingsGospelNight = {
+    text: { FR: "Evangile Soir",
+        AR: "إنجيل المساء"
+    },
+    prayers: [Readings.GospelNight + Readings.Psalm, Readings.GospelNight],
+    prayersArray: ReadingsArray,
+    languages: readingsLanguages,
+    parentBtn: btnIncenseVespers
 };
 const btnReadingsPropheciesDawn = {
     text: { FR: "Prophecies Matin",
@@ -222,12 +240,13 @@ const btnMassCommunion = {
         AR: "التوزيع" },
     parentBtn: btnMassReadings
 };
-btnMain.children = [btnMass, btnIncenseOffice];
+btnMain.children = [btnMass, btnIncenseOffice, btnDayReadings];
 btnMass.children = [btnIncenseDawn, btnMassOfferingOfTheLamb, btnMassRoshoumat, btnMassUnBaptised, btnMassBaptised];
 btnMassUnBaptised.children = [btnReadingsStPaul, btnReadingsKatholikon, btnReadingsPraxis, btnReadingsSynaxarium, btnReadingsGospelMass];
 btnIncenseVespers.children = [btnReadingsGospelIncenseVespers];
 btnIncenseDawn.children = [btnReadingsGospelIncenseDawn];
 const commonMassChildBtns = [btnMassReconciliation, btnMassAnaphora, btnFractionPrayers, btnMassCommunion];
+btnDayReadings.children = [btnReadingsGospelIncenseVespers, btnReadingsGospelIncenseDawn, btnReadingsStPaul, btnReadingsKatholikon, btnReadingsPraxis, btnReadingsGospelMass];
 //we may need to change the properties of a given button for each mass: eg. changing the paryers property of btnMassReconciliation in order to adapt it
 btnMassStJean.children = commonMassChildBtns;
 btnMassStBasil.children = commonMassChildBtns;

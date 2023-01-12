@@ -360,9 +360,15 @@ function setCopticReadingsDate(coptDate) {
         if (greatLentOrPentecostal.includes('GreatLent')) {
             if (btnMassUnBaptised.children.indexOf(btnReadingsPropheciesDawn) == -1 && todayDate.getDay() != 0 && todayDate.getDay() != 6) {
                 btnMassUnBaptised.children.push(btnReadingsPropheciesDawn);
+                btnIncenseDawn.children.push(btnReadingsPropheciesDawn);
+                btnDayReadings.children.push(btnReadingsPropheciesDawn);
+                btnDayReadings.children.push(btnReadingsGospelNight);
             }
             else if (btnMassUnBaptised.children.indexOf(btnReadingsPropheciesDawn) != -1 && (todayDate.getDay() == 0 || todayDate.getDay() == 6)) {
                 btnMassUnBaptised.children.splice(btnMassUnBaptised.children.indexOf(btnReadingsPropheciesDawn), 1);
+                btnIncenseDawn.children.splice(btnIncenseDawn.children.indexOf(btnReadingsPropheciesDawn), 1);
+                btnDayReadings.children.splice(btnIncenseDawn.children.indexOf(btnReadingsPropheciesDawn), 1);
+                btnDayReadings.children.splice(btnMassUnBaptised.children.indexOf(btnReadingsGospelNight), 1);
             }
         }
         ;
