@@ -135,7 +135,7 @@ const btnReadingsStPaul = {
         EN: 'Pauline Epistle'
     },
     prayers: [Readings.StPaul],
-    prayersArray: ReadingsArray,
+    prayersArray: StPaulArray,
     languages: readingsLanguages,
 };
 const btnReadingsKatholikon = {
@@ -143,7 +143,7 @@ const btnReadingsKatholikon = {
         AR: "الكاثوليكون"
     },
     prayers: [Readings.Katholikon],
-    prayersArray: ReadingsArray,
+    prayersArray: KatholikonArray,
     languages: readingsLanguages,
     parentBtn: btnMassReadings,
 };
@@ -152,7 +152,7 @@ const btnReadingsSynaxarium = {
         AR: "السنكسار"
     },
     prayers: [Readings.Synaxarium],
-    prayersArray: ReadingsArray,
+    prayersArray: SynaxariumArray,
     languages: readingsLanguages,
     parentBtn: btnMassReadings,
 };
@@ -161,7 +161,7 @@ const btnReadingsPraxis = {
         AR: "الإبركسيس"
     },
     prayers: [Readings.Praxis],
-    prayersArray: ReadingsArray,
+    prayersArray: PraxisArray,
     languages: readingsLanguages,
     parentBtn: btnMassReadings,
 };
@@ -170,7 +170,7 @@ const btnReadingsGospelMass = {
         AR: "إنجيل القداس"
     },
     prayers: [Readings.GospelMass + Readings.Psalm, Readings.GospelMass],
-    prayersArray: ReadingsArray,
+    prayersArray: GospelMassArray,
     languages: readingsLanguages,
     parentBtn: btnMassReadings,
 };
@@ -179,7 +179,7 @@ const btnReadingsGospelIncenseVespers = {
         AR: "إنجيل عشية"
     },
     prayers: [Readings.GospelVespers + Readings.Psalm, Readings.GospelVespers],
-    prayersArray: ReadingsArray,
+    prayersArray: GospelVespersArray,
     languages: readingsLanguages,
     parentBtn: btnIncenseVespers
 };
@@ -188,7 +188,7 @@ const btnReadingsGospelIncenseDawn = {
         AR: "إنجيل باكر"
     },
     prayers: [Readings.GospelDawn + Readings.Psalm, Readings.GospelDawn],
-    prayersArray: ReadingsArray,
+    prayersArray: GospelDawnArray,
     languages: readingsLanguages,
     parentBtn: btnIncenseDawn
 };
@@ -197,7 +197,7 @@ const btnReadingsGospelNight = {
         AR: "إنجيل المساء"
     },
     prayers: [Readings.GospelNight + Readings.Psalm, Readings.GospelNight],
-    prayersArray: ReadingsArray,
+    prayersArray: GospelNightArray,
     languages: readingsLanguages,
     parentBtn: btnIncenseVespers
 };
@@ -206,7 +206,7 @@ const btnReadingsPropheciesDawn = {
         AR: "نبوات باكر"
     },
     prayers: [Readings.PropheciesDawn],
-    prayersArray: ReadingsArray,
+    prayersArray: PropheciesDawnArray,
     languages: readingsLanguages,
     parentBtn: btnIncenseDawn
 };

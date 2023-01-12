@@ -21,14 +21,14 @@ function pushToArray() {
 }
 function removeLanguage(langIndex) {
     //we need to start by emptying the  div ending with the language that wille be removed (eg.: if we are removing English, we empty 'TargetDivEN') because it will not be emptied by the showPrayers method
-    let l = document.getElementById(mainDiv.id + languages[langIndex]);
+    let l = document.getElementById(mainDiv.id + allLanguages[langIndex]);
     if (l) {
         l.innerHTML = "";
     }
     ;
     //then we remove the language from the array
-    languages.splice(langIndex, 1);
-    return languages;
+    allLanguages.splice(langIndex, 1);
+    return allLanguages;
 }
 ;
 function removeOrAddLanguageWithButton(r) {
@@ -36,11 +36,11 @@ function removeOrAddLanguageWithButton(r) {
     let list, el;
     if (!r) {
         list = listDiv.appendChild(document.createElement('ul'));
-        languages.map(l => {
+        allLanguages.map(l => {
             el = document.createElement('li');
             el.innerText = 'Click to remove ' + l;
             el.addEventListener('click', () => {
-                removeLanguage(languages.indexOf(l));
+                removeLanguage(allLanguages.indexOf(l));
                 listDiv.innerHTML = '';
             });
             list.appendChild(el);
@@ -63,17 +63,17 @@ function removeOrAddLanguageWithButton(r) {
     ;
 }
 function addLanguage(lang) {
-    languages.push(lang);
+    allLanguages.push(lang);
     for (let i = 0; i < mainDiv.children.length; i++) {
         if (mainDiv.children[i].children.length > 0) {
             let id = mainDiv.children[i].children[0].getAttribute('id');
             id.includes('Date=0000') ? id = id.split('Date=000')[0] + 'Date=0000' : id = id.split('Date=')[0];
-            showPrayerInAllLanguagesForAGivenID(id, languages);
+            showPrayerInAllLanguagesForAGivenID(id, allLanguages);
             break;
         }
     }
     ;
-    return languages;
+    return allLanguages;
 }
 ;
 setCopticDates();
@@ -202,14 +202,13 @@ function showPrayers(prayers, prayersArray, languages) {
         prayers[0] = input.value;
     }
     //we empty the subdivs of the mainDiv before populating them with the new text
-    languages.map(l => document.getElementById(mainDiv.id + l).innerHTML = "");
+    allLanguages.map(l => document.getElementById(mainDiv.id + l).innerHTML = "");
     //loop in through each id root and showing the prayer text and title:
     //prayers.map(prayer => showPrayerInAllLanguagesForAGivenID(prayer, languages));
     prayers.map(prayer => retrievePrayersFromAnArray(prayersArray, prayer, languages));
     closeSideBar();
 }
 ;
-//Experimental
 function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
     let date;
     prayerID.includes('Date=0000') ? date = 'Date=0000' : date = "Date=" + copticReadingsDate;
@@ -217,7 +216,7 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
     idsArray.push(prayerID + date + 'Title', prayerID + date);
     idsArray.map(id => {
         for (let i = 0; i < prayersArray.length; i++) {
-            if (ReadingsArray[i][0] == id) {
+            if (prayersArray[i][0] == id) {
                 for (let x = 0; x < prayersArray[i].length; x++) {
                     lang = languages[x];
                     text = prayersArray[i][x + 1];
@@ -228,6 +227,9 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
                     if (document.getElementById(mainDiv.id + lang)) {
                         document.getElementById(mainDiv.id + lang).appendChild(el);
                     }
+                    else {
+                        console.log('There is no document element in the DOM to show this language: ', lang);
+                    }
                     ;
                 }
             }
@@ -235,6 +237,7 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
     });
 }
 ;
+//Depricated - it was used when we were retrieving the text from hidden html elements
 function showPrayerInAllLanguagesForAGivenID(prayerID, langArray) {
     let date = "Date=" + copticReadingsDate;
     if (prayerID.includes('Date=0000')) {
@@ -245,7 +248,7 @@ function showPrayerInAllLanguagesForAGivenID(prayerID, langArray) {
     //takes the ID of an htmelement, adds the word "Title" to it and one of the languages key letters (eg.: AR, FR, etc) to the ID (which gives an ID like "MesseStCyrilReconciliationTitleAR"), and retrievs the text of the html elment. Then repeats the same thing without adding the word "Title" (wich means that the ID is like "MesseStCyrilReconciliationAR") 
     let idsArray = new Array;
     if (!langArray) {
-        langArray = languages;
+        langArray = allLanguages;
     }
     ;
     langArray.map(l => {
@@ -257,6 +260,7 @@ function showPrayerInAllLanguagesForAGivenID(prayerID, langArray) {
     // getTextAndAppendElementToMainDiv(prayerID) // we think this is useless, to be checked
 }
 ;
+//Depricated - it was used when we were retrieving the text from hidden html elements
 function getTextAndAppendElementToMainDiv(elID) {
     let prayer;
     //we get the last 2 or 3 letters of the element ID, those characters represent  the language letters (eg.: AR, FR, COP etc)
@@ -293,6 +297,7 @@ function getTextAndAppendElementToMainDiv(elID) {
     ;
 }
 ;
+//Depricated - it was used when we were retrieving the text from hidden html elements
 function getPrayerText(elID) {
     let id = elID.split('lang=')[0] + elID.split('lang=')[1];
     //gets the text of a given prayer by retrieving the html innerHTML of the specified html element
@@ -358,17 +363,25 @@ function setCopticReadingsDate(coptDate) {
         // it means we are either during the Great Lent period, or the Penstecostal 50 days, or any day/feast within these periods
         //console.log('we are within the Great  Lent period or the Pentecostal 50 days and the date returned by the function = ', greatLentOrPentecostal)
         if (greatLentOrPentecostal.includes('GreatLent')) {
-            if (btnMassUnBaptised.children.indexOf(btnReadingsPropheciesDawn) == -1 && todayDate.getDay() != 0 && todayDate.getDay() != 6) {
-                btnMassUnBaptised.children.push(btnReadingsPropheciesDawn);
-                btnIncenseDawn.children.push(btnReadingsPropheciesDawn);
-                btnDayReadings.children.push(btnReadingsPropheciesDawn);
+            if (btnDayReadings.children.indexOf(btnReadingsPropheciesDawn) == -1 && todayDate.getDay() != 0 && todayDate.getDay() != 6) {
+                //it means btnReadingsPropheciesDawn does not appear in the Day Readings buttons list (i.e., =-1), and we are neither a Saturday or a Sunday, which means that there are prophocies lectures for these days and we need to add the button in all the Day Readings Menu, and the Incense Dawn
+                btnIncenseDawn.children.unshift(btnReadingsPropheciesDawn);
+                btnDayReadings.children.splice(1, 0, btnReadingsPropheciesDawn);
+                //btnIncenseDawn.children.unshift(btnReadingsPropheciesDawn);
+                //btnDayReadings.children.unshift(btnReadingsPropheciesDawn);
+            }
+            else if (btnDayReadings.children.indexOf(btnReadingsPropheciesDawn) != -1 && (todayDate.getDay() == 0 || todayDate.getDay() == 6)) {
+                //it means btnReadingsPropheciesDawn appears in the Day Readings buttons list, and we are either a Saturday or a Sunday, which means that there is no prophocies for these days and we need to remove the button from all the menues to which it had been added before
+                btnIncenseDawn.children.splice(btnIncenseDawn.children.indexOf(btnReadingsPropheciesDawn), 1);
+                btnDayReadings.children.splice(btnDayReadings.children.indexOf(btnReadingsPropheciesDawn), 1);
+            }
+            if (btnDayReadings.children.indexOf(btnReadingsGospelNight) == -1 && todayDate.getDay() == 0) {
+                // it means that we are a Sunday. We add the Gospel Night button to the Day Readings menu (we do not add it to the Unbaptized mass menu because it is not read during the mass)
                 btnDayReadings.children.push(btnReadingsGospelNight);
             }
-            else if (btnMassUnBaptised.children.indexOf(btnReadingsPropheciesDawn) != -1 && (todayDate.getDay() == 0 || todayDate.getDay() == 6)) {
-                btnMassUnBaptised.children.splice(btnMassUnBaptised.children.indexOf(btnReadingsPropheciesDawn), 1);
-                btnIncenseDawn.children.splice(btnIncenseDawn.children.indexOf(btnReadingsPropheciesDawn), 1);
-                btnDayReadings.children.splice(btnIncenseDawn.children.indexOf(btnReadingsPropheciesDawn), 1);
-                btnDayReadings.children.splice(btnMassUnBaptised.children.indexOf(btnReadingsGospelNight), 1);
+            else if (btnDayReadings.children.indexOf(btnReadingsGospelNight) != -1 && todayDate.getDay() != 0) {
+                //it means we are not a Sunday, which means that if the Night Gospel button appears in the Day Readings menu, we need to remove it
+                btnDayReadings.children.splice(btnDayReadings.children.indexOf(btnReadingsGospelNight), 1);
             }
         }
         ;
@@ -589,11 +602,11 @@ function checkForUnfixedEvent(today, resDate, weekDay) {
         //If we are Saturday (which means that diffrence = 1) and we are after 3 PM, we will retrieve the readings of the Resurrection because we use to celebrate the Resurrection Mass on Saturday evening not on Sunday itself
         return "Resurrection"; //we get the reading of Resurrection although we are still Saturday
     }
-    else if (diffrence >= 1 && diffrence < 59) {
+    else if (diffrence >= 1 && diffrence < 58) {
         //We are during the Great Lent period which counts 56 days from the Saturday preceding the 1st Sunday (which is the begining of the so called "preparation week") until the Resurrection day
-        return isItSundayOrWeekDay('GreatLent', (59 - diffrence), weekDay);
+        return isItSundayOrWeekDay('GreatLent', (58 - diffrence), weekDay);
     }
-    else if (diffrence > 58 && diffrence < 63) {
+    else if (diffrence > 57 && diffrence < 63) {
         //We should be during the Jonah Feast 
         //We need to check the accuracy of the numbers (58 and 63)
         //The Jonay feast starts 15 days before the beginig of the Great Lent

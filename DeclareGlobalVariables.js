@@ -8,6 +8,16 @@ const ResurrectionDates = ["2023-04-16", "2024-05-05", "2025-04-29", "2026-04-12
 var PrayersArray = [];
 var prayersLanguages = ['AR', 'CA', 'FR', 'COP'];
 var ReadingsArray = [];
+var PraxisArray = [];
+var KatholikonArray = [];
+var StPaulArray = [];
+var SynaxariumArray = [];
+var GospelMassArray = [];
+var GospelVespersArray = [];
+var GospelDawnArray = [];
+var GospelNightArray = [];
+var PropheciesDawnArray = [];
+var ReadingsArray = [];
 var readingsLanguages = ['AR', 'FR', 'EN'];
 const Readings = {
     BibleIntroFR: '',
@@ -132,6 +142,6 @@ const PrayersTree = {
 //VARS
 var todayDate = new Date();
 todayDate.setHours(0, 0, 0);
-var languages = ['AR', 'FR', 'COP', 'CA', 'EN'];
+var allLanguages = ['AR', 'FR', 'COP', 'CA', 'EN'];
 var allDivs;
 var copticDate, copticMonth, copticDay, copticReadingsDate;
