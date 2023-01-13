@@ -4,6 +4,7 @@ const mainDiv = document.getElementById('TargetDiv');
 const sideBar = document.getElementById('sidebar');
 const contentDiv = document.getElementById('content');
 const sideBarBtn = document.getElementById('opensidebar');
+const toggleDevBtn = document.getElementById('toggleDev');
 const ResurrectionDates = ["2023-04-16", "2024-05-05", "2025-04-29", "2026-04-12", "2027-05-02", "2028-04-23", "2029-04-8", "2030-04-28"]; // these are  the dates of the Ressurection feast caclulated from the end of the Jewish Pessah Feast as got from Google
 var PrayersArray = [];
 var prayersLanguages = ['AR', 'CA', 'FR', 'COP'];

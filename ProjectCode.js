@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const copticReadingsDates = getCopticReadingsDates();
+toggleDevBtn.addEventListener('click', () => openDev(toggleDevBtn));
 function removeLanguage(lang) {
     //we need to start by emptying the  div ending with the language that wille be removed (eg.: if we are removing English, we empty 'TargetDivEN') because it will not be emptied by the showPrayers method
     let l = document.getElementById(mainDiv.id + lang);
