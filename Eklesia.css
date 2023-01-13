@@ -59,8 +59,6 @@
   padding: 1vw 1vw;
   margin: 0vw 0vw;
   align-items: flex-start;
-  min-width: 0vmin;
-  max-width: 30vmax;
 }
 .TargetDiv {
   display: flex;
