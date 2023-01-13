@@ -1,9 +1,9 @@
 .Container {
   display: flex;
-  flex: 1 1 auto;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: stretch;
+  /* flex: 1 1 auto; */
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: center;
 }
 .Title {
   font-style: italic !important;
@@ -55,6 +55,12 @@
   margin-bottom: 3px;
   padding: 1vw 1vw;
   width: 19vw;
+  align-items: flex-start;
+}
+.TargetDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
 }
 .Priest {
   background-color: #0593b3;
@@ -135,6 +141,8 @@
   background-color: #111;
   color: white;
   padding: 10px 15px;
+  margin-top: 2px;
+  margin: 3px;
   border: none;
 }
 
@@ -145,7 +153,7 @@
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 #content {
   transition: margin-left 0.3s; /* If you want a transition effect */
-  padding: 20px;
+  padding: 10px;
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
