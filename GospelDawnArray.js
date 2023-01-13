@@ -6685,5 +6685,5 @@ GospelDawnArray = [
     ["ReadingsGospelIncenseDawnDate=Resurrection",
         "( والمجد للـه دائماً )",
         "",
-        ""],
+        ""]
 ];

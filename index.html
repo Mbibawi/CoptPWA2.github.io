@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-    <div id="sourcesDiv" class="hiddenDiv" style="display:none";>
+<!--     <div id="sourcesDiv" class="hiddenDiv" style="display:none";>
         <div id="hiddenReadings"></div>
         <div id="hiddenPrayers"></div>
         <div id="Test">
@@ -44,7 +44,7 @@
                 Ceci est un test du contenu en copte
         </div>
         </div>
-    </div>
+    </div> -->
     
 </div>
     <div id="visibelElements">
@@ -53,47 +53,52 @@
         <div id='sidebar' class="sidebar">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeSideBar()">&times;</a>
                 <div  id="subBtns"></div>
-<!--                 <a class="active" href="#home">Home</a>
-                <a href="#news">News</a>
-                <a href="#contact">Contact</a>
-                <a href="#about">About</a> -->
         </div>
 
         <!-- Page content -->
-        <div id='content' class="content">
-                <div id='InstallPWA' class='btnIcon' role = 'button'>Install PWA</div>
-                <div id="ProvideIDFromInput">
-                    <label for="elIdLable">Element ID (manually submit and element ID):
-                     <input type="text" id="elID" name="elID" required
-                   minlength="0" maxlength="100" size="10" accept="text">
-                    </label>
+        <div id='content' class="Content">
+        <!-- Development area temporary -->
+                <button id="toggleDev" class="openbtn" onclick='openDev(this)'>&#9776; Toggle Temporary Dev Area</button>
+                <div id='Dev' class = 'Dev' style="display: none;">
+                        <div id='InstallPWA' class='btnIcon' role = 'button'>Install PWA            
+                        </div>
+                        <div id="ProvideIDFromInput">
+                                <label for="elIdLable">Element ID (manually submit and element ID):
+                                <input type="text" id="elID" name="elID" required
+                                minlength="0" maxlength="100" size="10" accept="text">
+                                </label>
+                        </div>
+                        <!-- Change Date -->
+                        <p class="comment">You can  manually change the  calendar date and the corresponding coptic date by clicking on "Next Coptic Day" or "Previous Coptic Day"</p>
+                        <p class="comment">You can also set  the calendar date to a specific date by typing the date in this format "Date=yyyy-mm-dd" and clicking on "Next Coptic Date" or "Previous Coptic Date"</p>
+                        <div id='changeCopticDay'>
+                                <button type="submit" id="nextDay" size="10" style='background-color: rgb(33, 175, 175);' onclick="changeDay(true)">Next Coptic Day</button>
+                                <button type="submit" id="previousDay" size="10" style='background-color: rgb(33, 175, 175);' onclick="changeDay(false)">Previous Coptic Day</button>
+                        </div>
+        <!--                 <select id="Menu" class="Menu">*
+                        </select> -->
+                        <button onclick="showPrayers(['getfromtextbox'])" style="margin-top: 7px; background-color: coral;">Show Prayers</button>
+                        <div id="showCurrentDate" class="showDate"></div>
+                        <h3 style="color: cadetblue; font-style: italic;">Below will be displayed the content of the prayers as appended divs to the "TargetDiv" </h3>
+                        <div id='addOrRemoveLanguages'  style="padding: 7px;">
+                                <button id='removeLanguage' onclick='removeOrAddLanguageWithButton(false)' style="background-color: cadetblue;">Remove Language</button>
+                                <button id='addLanguage' onclick='removeOrAddLanguageWithButton(true)' style="background-color: cadetblue;">Add Language</button>
+                                <div id='showList'></div>
+                        </div>
                 </div>
-                <!-- Change Date -->
-                <p class="comment">You can  manually change the  calendar date and the corresponding coptic date by clicking on "Next Coptic Day" or "Previous Coptic Day"</p>
-                <p class="comment">You can also set  the calendar date to a specific date by typing the date in this format "Date=yyyy-mm-dd" and clicking on "Next Coptic Date" or "Previous Coptic Date"</p>
-                <div id='changeCopticDay'>
-                        <button type="submit" id="nextDay" size="10" style='background-color: rgb(33, 175, 175);' onclick="changeDay(true)">Next Coptic Day</button>
-                        <button type="submit" id="previousDay" size="10" style='background-color: rgb(33, 175, 175);' onclick="changeDay(false)">Previous Coptic Day</button>
+        <!-- Main area -->
+                <div id='main'>
+                        <button id="opensidebar" class="openbtn" onclick='openSideBar()'>&#9776; Open Sidebar</button>
+                        <div id='TargetDiv' class = 'Container'></div> 
+                        <div id='TemplateTargetDiv'>
+                                <div id='TargetDivCOP'></div>
+                                <div id='TargetDivEN'></div>
+                                <div id='TargetDivFR'></div>
+                                <div id='TargetDivAR'></div>
+                                <div id='TargetDivCA'></div>
+                        </div> 
                 </div>
-<!--                 <select id="Menu" class="Menu">*
-                </select> -->
-                <button onclick="showPrayers(['getfromtextbox'])" style="margin-top: 7px; background-color: coral;">Show Prayers</button>
-                <div id="showCurrentDate" class="showDate"></div>
-                <h3 style="color: cadetblue; font-style: italic;">Below will be displayed the content of the prayers as appended divs to the "TargetDiv" </h3>
-                <div id='addOrRemoveLanguages'  style="padding: 7px;">
-                        <button id='removeLanguage' onclick='removeOrAddLanguageWithButton(false)' style="background-color: cadetblue;">Remove Language</button>
-                        <button id='addLanguage' onclick='removeOrAddLanguageWithButton(true)' style="background-color: cadetblue;">Add Language</button>
-                        <div id='showList'></div>
-                </div>
-                <button id="opensidebar" class="openbtn" onclick='openSideBar()'>&#9776; Open Sidebar</button>
-                <div id='TargetDiv' class="Container">
-                    <div id='TargetDivCOP' class='COP'></div>
-                    <div id='TargetDivEN' class='EN'></div>
-                    <div id='TargetDivFR' class='FR'></div>
-                    <div id='TargetDivAR' class='AR'></div>
-                    <div id='TargetDivCA' class='CA'></div>
-                </div> 
-            </div>
+        </div>
         </div>
         
 

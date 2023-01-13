@@ -8,17 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const copticReadingsDates = getCopticReadingsDates();
-//pushToArray();
-function pushToArray() {
-    for (let i = 0; i < 300000; i++) {
-        let sub = [];
-        sub.push('ReadingsPraxisDate=0201' + i.toString());
-        sub.push('نص الإبركسيس بالعربي');
-        sub.push('Praxis text in French');
-        sub.push('Praxis text in English');
-        ReadingsArray.push(sub);
-    }
-}
 function removeLanguage(lang) {
     //we need to start by emptying the  div ending with the language that wille be removed (eg.: if we are removing English, we empty 'TargetDivEN') because it will not be emptied by the showPrayers method
     let l = document.getElementById(mainDiv.id + lang);
@@ -82,6 +71,7 @@ function addLanguage(lang) {
 ;
 setCopticDates();
 function setCopticDates() {
+    todayDate = new Date();
     copticDate = convertGregorianDateToCopticDate(todayDate);
     copticMonth = copticDate.slice(2, 4);
     copticDay = copticDate.slice(0, 2);
@@ -206,7 +196,8 @@ function showPrayers(prayers, prayersArray, languages) {
         prayers[0] = input.value;
     }
     //we empty the subdivs of the mainDiv before populating them with the new text
-    allLanguages.map(l => document.getElementById(mainDiv.id + l).innerHTML = "");
+    //allLanguages.map(l => document.getElementById(mainDiv.id + l).innerHTML = "");
+    mainDiv.innerHTML = "";
     //loop in through each id root and showing the prayer text and title:
     //prayers.map(prayer => showPrayerInAllLanguagesForAGivenID(prayer, languages));
     prayers.map(prayer => retrievePrayersFromAnArray(prayersArray, prayer, languages));
@@ -222,12 +213,22 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
     retrieve(idsArray);
     function retrieve(idsArray) {
         let firstElement;
+        let template = document.getElementById('TemplateTargetDiv'), newDiv;
+        //we will make the inner Html of the newly created 'template' element, equal to the innerHtml of the mainDiv: i.e., it will include a child for each language: 'TargetDivFR, TargetDivAR, etc.'
+        //prayersArray is an Array of string arrays (string[][]) in which the text we want to display by clicking on the button, is found. For example, PraxisArray is an array including all the Praxis text. It is the array in which we look for text when we click btnReadingsPraxis
         for (let i = 0; i < prayersArray.length; i++) {
+            //for each array in the prayersArray, we set firstElement as the text of the first element of each array
             firstElement = prayersArray[i][0];
             if (firstElement == idsArray[0] || firstElement == idsArray[1]) {
+                // if we find an array wich first element equals firstElement (i.e., we find an Array = ['prayerID', 'text in Arabic', 'text in French', 'text in English']), we create a newDiv to represent the text in this subArray
+                newDiv = document.createElement('div');
+                newDiv.id = firstElement;
+                newDiv.classList.add('TargetDiv');
+                newDiv.innerHTML = template.innerHTML;
+                //now the newDiv has the same childs as mainDiv, i.e., it has a child for each language (TargetDivAR, TargetDivFR, TargetDivEN, etc.)
                 for (let x = 0; x < prayersArray[i].length; x++) {
+                    //we check that the language is included in allLanguages, i.e. if it has not been removed by the user which means that he does not want it to be displayed. If the language is not removed, we retrieve the text in this language. otherwise we will not retrieve its text.
                     if (allLanguages.indexOf(languages[x]) != -1) {
-                        //we check that the language is included in allLanguages, i.e. if it has not been removed,we retrieve the text in this language, otherwise we will not retrieve its text
                         if (firstElement.includes('Title')) {
                             el = document.createElement('div');
                             el.classList.add('Title');
@@ -241,15 +242,21 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
                         text = prayersArray[i][x + 1];
                         el.classList.add(lang);
                         el.innerText = text;
-                        if (document.getElementById(mainDiv.id + lang)) {
-                            document.getElementById(mainDiv.id + lang).appendChild(el);
+                        for (let c = 0; c < newDiv.children.length; c++) {
+                            if (newDiv.children[c].id == 'TargetDiv' + lang) {
+                                newDiv.children[c].appendChild(el);
+                                break;
+                            }
+                            ;
                         }
-                        else {
-                            console.log('There is no document element in the DOM to show this language: ', lang);
-                        }
-                        ;
                     }
+                    else {
+                        console.log('The lanugage is not one of the languages set by the user: ', lang);
+                    }
+                    ;
+                    mainDiv.appendChild(newDiv);
                 }
+                ;
             }
         }
     }
@@ -743,6 +750,28 @@ function getCopticReadingsDates() {
     return [["1903", "1307"], ["1301", "1703"], ["1101", "2708"], ["0901", "2803"], ["0501", "3005"], ["1001", "3005"], ["1508", "0105"], ["1907", "0105"], ["2005", "0105"], ["2209", "0105"], ["2510", "0105"], ["2908", "0105"], ["0110", "0105"], ["0309", "0105"], ["0611", "0105"], ["1501", "0105"], ["2401", "0105"], ["2602", "0105"], ["1612", "0109"], ["2105", "0109"], ["2110", "0109"], ["0304", "0109"], ["2504", "0206"], ["0704", "0206"], ["0711", "0206"], ["2002", "0206"], ["3006", "0210"], ["1208", "0311"], ["1303", "0311"], ["1812", "0311"], ["2207", "0311"], ["2810", "0311"], ["3003", "0311"], ["3009", "0311"], ["0103", "0311"], ["0202", "0311"], ["0205", "0311"], ["0308", "0311"], ["0701", "0311"], ["0706", "0311"], ["0709", "0311"], ["0805", "0311"], ["1102", "0311"], ["1702", "0311"], ["1409", "0312"], ["1511", "0312"], ["1704", "0312"], ["2109", "0312"], ["2410", "0312"], ["2909", "0312"], ["0209", "0312"], ["0906", "0312"], ["1401", "0312"], ["1310", "0313"], ["1608", "0405"], ["1609", "0405"], ["1611", "0405"], ["2404", "0405"], ["2906", "0405"], ["1708", "0511"], ["1803", "0511"], ["1811", "0511"], ["2104", "0511"], ["2106", "0511"], ["2911", "0511"], ["0404", "0511"], ["0807", "0511"], ["1006", "0511"], ["0604", "0605"], ["0806", "0605"], ["1505", "0801"], ["2004", "0801"], ["2010", "0801"], ["2212", "0801"], ["2307", "0801"], ["2606", "0801"], ["2610", "0801"], ["2611", "0801"], ["0401", "0801"], ["0412", "0801"], ["0504", "0801"], ["0508", "0801"], ["0509", "0801"], ["0601", "0801"], ["0708", "0801"], ["0910", "0801"], ["2102", "0801"], ["2501", "0801"], ["0106", "0903"], ["0303", "0903"], ["0407", "0903"], ["1201", "0903"], ["0812", "1009"], ["1509", "1202"], ["1210", "1203"], ["2111", "1307"], ["0402", "1307"], ["0403", "1307"], ["0804", "1307"], ["1002", "1307"], ["2107", "1312"], ["2507", "1402"], ["1211", "1503"], ["1510", "1503"], ["2411", "1503"], ["2805", "1503"], ["0112", "1503"], ["0410", "1503"], ["0411", "1503"], ["0606", "1503"], ["0912", "1503"], ["2807", "1601"], ["0909", "1608"], ["1104", "1610"], ["1506", "1610"], ["1603", "1610"], ["1705", "1610"], ["0204", "1610"], ["1007", "1701"], ["1212", "1701"], ["1209", "1703"], ["1406", "1703"], ["1412", "1703"], ["1504", "1703"], ["1806", "1703"], ["2103", "1703"], ["2706", "1703"], ["2809", "1703"], ["0104", "1703"], ["0302", "1703"], ["0502", "1703"], ["0603", "1703"], ["0705", "1703"], ["0902", "1703"], ["3001", "1705"], ["1008", "2009"], ["1206", "2009"], ["1405", "2009"], ["1906", "2009"], ["2505", "2009"], ["2910", "2009"], ["0108", "2009"], ["0306", "2009"], ["0702", "2009"], ["0703", "2009"], ["0907", "2009"], ["1204", "2009"], ["1302", "2009"], ["2502", "2009"], ["1807", "2011"], ["2008", "2011"], ["2408", "2011"], ["2506", "2011"], ["2608", "2011"], ["2806", "2011"], ["0208", "2011"], ["0610", "2011"], ["1502", "2011"], ["1902", "2011"], ["1107", "2101"], ["1407", "2101"], ["2301", "2101"], ["1804", "2202"], ["0406", "2202"], ["1010", "2203"], ["1308", "2203"], ["1905", "2203"], ["1911", "2203"], ["2012", "2203"], ["2210", "2203"], ["2603", "2203"], ["3011", "2203"], ["0107", "2203"], ["0408", "2203"], ["0707", "2203"], ["2701", "2203"], ["2801", "2203"], ["3007", "2204"], ["1309", "2205"], ["1710", "2205"], ["1909", "2205"], ["2310", "2205"], ["0510", "2205"], ["0904", "2205"], ["0908", "2205"], ["2402", "2205"], ["1910", "2308"], ["2312", "2308"], ["2711", "2308"], ["2712", "2308"], ["0609", "2308"], ["0710", "2308"], ["0809", "2308"], ["0703", "2308"], ["0810", "2409"], ["2509", "2503"], ["2511", "2503"], ["2808", "2503"], ["0505", "2503"], ["0802", "2503"], ["2802", "2503"], ["1103", "2601"], ["1304", "2601"], ["1606", "2601"], ["0712", "2601"], ["0512", "2605"], ["1411", "2702"], ["1809", "2702"], ["1912", "2702"], ["2707", "2702"], ["0506", "2702"], ["0811", "2702"], ["0905", "2702"], ["1604", "2703"], ["2311", "2703"], ["0503", "2703"], ["0607", "2703"], ["1012", "2703"], ["2902", "2703"], ["1110", "2708"], ["1306", "2708"], ["1404", "2708"], ["1605", "2708"], ["1706", "2708"], ["1808", "2708"], ["2211", "2708"], ["2306", "2708"], ["2705", "2708"], ["1111", "2708"], ["2201", "2708"], ["1101", "2708"], ["2201", "2708"], ["1004", "2803"], ["1109", "2803"], ["1311", "2803"], ["1403", "2803"], ["1410", "2803"], ["1707", "2803"], ["1709", "2803"], ["1805", "2803"], ["1904", "2803"], ["1908", "2803"], ["2206", "2803"], ["2303", "2803"], ["2305", "2803"], ["2406", "2803"], ["2412", "2803"], ["2704", "2803"], ["2709", "2803"], ["0207", "2803"], ["0310", "2803"], ["0507", "2803"], ["0513", "2803"], ["1011", "2803"], ["1112", "2803"], ["2302", "2803"], ["1106", "2903"], ["1207", "2903"], ["1408", "2903"], ["1607", "2903"], ["2006", "2903"], ["2007", "2903"], ["2208", "2903"], ["2407", "2903"], ["0203", "2903"], ["0307", "2903"], ["0409", "2903"], ["1602", "2903"], ["1802", "2903"], ["1810", "2905"], ["1003", "3005"], ["1108", "3005"], ["1507", "3005"], ["1512", "3005"], ["1711", "3005"], ["2121", "3005"], ["2405", "3005"], ["2508", "3005"], ["2604", "3005"], ["2607", "3005"], ["2811", "3005"], ["2905", "3005"], ["0102", "3005"], ["0212", "3005"], ["0602", "3005"], ["0608", "3005"], ["0612", "3005"], ["0808", "3005"], ["2001", "3005"], ["2901", "3005"], ["0211", "3008"], ["2003", "3008"], ["2309", "3008"], ["2710", "3008"], ["0111", "3008"], ["0911", "3008"], ["3002", "3008"], ["0301", "0311"]];
 }
 ;
+function toggleSideBar(btn) {
+    let sideBar = document.getElementById('sideBar');
+    if (sideBar.style.width == '0px') {
+        openSideBar();
+    }
+    else {
+        closeSideBar();
+    }
+}
+function openDev(btn) {
+    let dev = document.getElementById('Dev');
+    dev.style.display = "block";
+    btn.removeEventListener('click', () => openDev(btn));
+    btn.addEventListener('click', () => closeDev(btn));
+}
+;
+function closeDev(btn) {
+    let dev = document.getElementById('Dev');
+    dev.style.display = "none";
+    btn.removeEventListener('click', () => closeDev(btn));
+    btn.addEventListener('click', () => openDev(btn));
+}
 function openSideBar() {
     let btnText = String.fromCharCode(9776) + 'Close Sidebar';
     let width = "190px";
@@ -751,13 +780,15 @@ function openSideBar() {
     sideBarBtn.innerText = btnText;
     sideBarBtn.removeEventListener('click', openSideBar);
     sideBarBtn.addEventListener('click', closeSideBar);
+    setCopticDates();
 }
 ;
 /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
 function closeSideBar() {
     let btnText = String.fromCharCode(9776) + 'Open Sidebar';
-    sideBar.style.width = "0";
-    contentDiv.style.marginLeft = "0";
+    let width = "0px";
+    sideBar.style.width = width;
+    contentDiv.style.marginLeft = width;
     sideBarBtn.innerText = btnText;
     sideBarBtn.removeEventListener('click', closeSideBar);
     sideBarBtn.addEventListener('click', openSideBar);

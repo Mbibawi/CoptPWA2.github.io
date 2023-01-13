@@ -140,8 +140,7 @@ const PrayersTree = {
     }
 };
 //VARS
-var todayDate = new Date();
-todayDate.setHours(0, 0, 0);
+var todayDate;
 var allLanguages = ['AR', 'FR', 'COP', 'CA', 'EN'];
 var allDivs;
 var copticDate, copticMonth, copticDay, copticReadingsDate;
