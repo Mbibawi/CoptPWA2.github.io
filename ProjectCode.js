@@ -71,8 +71,8 @@ function addLanguage(lang) {
 }
 ;
 setCopticDates();
-function setCopticDates() {
-    todayDate = new Date();
+function setCopticDates(today) {
+    today ? todayDate = today : todayDate = new Date();
     copticDate = convertGregorianDateToCopticDate(todayDate);
     copticMonth = copticDate.slice(2, 4);
     copticDay = copticDate.slice(0, 2);
@@ -97,7 +97,7 @@ function changeDay(next, days = 1) {
             todayDate.setTime(currentDate - days * calendarDay);
         }
     }
-    setCopticDates();
+    setCopticDates(todayDate);
     return todayDate;
 }
 ;
@@ -140,7 +140,7 @@ autoRunOnLoad();
 function autoRunOnLoad() {
     showChildButtonsOrPrayers(btnMain, true);
     //appendRepeatable('Test');
-    setCopticReadingsDate(copticDate);
+    setCopticDates();
     allDivs = document.querySelectorAll('div');
     console.log('all nodes count = ', document.querySelectorAll('*').length);
     //copticReadingsDate = '0101';
@@ -781,7 +781,7 @@ function openSideBar() {
     sideBarBtn.innerText = btnText;
     sideBarBtn.removeEventListener('click', openSideBar);
     sideBarBtn.addEventListener('click', closeSideBar);
-    setCopticDates();
+    //setCopticDates()
 }
 ;
 /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */

@@ -54,8 +54,8 @@
 .Title {
   margin-bottom: 3px;
   padding: 1vw 1vw;
-  width: 19vw;
   align-items: flex-start;
+  width: 30vmax;
 }
 .TargetDiv {
   display: flex;
