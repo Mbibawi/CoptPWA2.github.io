@@ -114,10 +114,12 @@ function addElementsToStringArray(strArray, elements) {
     return newArray;
 }
 ;
+//not used anymore since we are now using array instead of hidden html
 let appendExractedHtml = () => {
-    parseHtmlFile('htmlPrayers.html', 'hiddenPrayers');
-    parseHtmlFile('htmlReadings.html', 'hiddenReadings');
+    //parseHtmlFile('htmlPrayers.html', 'hiddenPrayers')
+    //parseHtmlFile('htmlReadings.html', 'hiddenReadings');
 };
+//not used anymore since we are now using array instead of hidden html
 function parseHtmlFile(htmlFileName, elID) {
     return __awaiter(this, void 0, void 0, function* () {
         let resp = yield fetch(htmlFileName);
@@ -135,7 +137,8 @@ function parseHtmlFile(htmlFileName, elID) {
     });
 }
 ;
-//document.addEventListener('DOMContentLoaded', appendExractedHtml)
+//not used anymore since we are now using array instead of hidden html
+document.addEventListener('DOMContentLoaded', appendExractedHtml);
 autoRunOnLoad();
 function autoRunOnLoad() {
     showChildButtonsOrPrayers(btnMain, true);
@@ -206,24 +209,49 @@ function showPrayers(prayers, prayersArray, languages) {
 }
 ;
 function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
-    let date;
-    prayerID.includes('Date=0000') ? date = 'Date=0000' : date = "Date=" + copticReadingsDate;
+    let date, orderdLanguages;
+    orderdLanguages = [...languages];
+    if (orderdLanguages[0] == 'COP') {
+        orderdLanguages.reverse();
+    }
+    prayerID.includes('Date=0000') ? date = '' : date = "Date=" + copticReadingsDate;
     let idsArray = [], text, el, lang;
     idsArray.push(prayerID + date + 'Title', prayerID + date);
     //idsArray.map(id => retrieve(id))
     retrieve(idsArray);
     function retrieve(idsArray) {
-        let firstElement, row;
-        for (let prayer of prayersArray) {
-            //for each array in the prayersArray, we set firstElement as the text of the first element of each array
+        let firstElement, row, actorClass = undefined;
+        PrayersArray.map((p) => {
+            let prayer = [...p];
             firstElement = prayer[0];
+            if (firstElement.includes('Assembly')) {
+                actorClass = 'Assembly';
+                firstElement = firstElement.replace('Assembly', '');
+            }
+            else if (firstElement.includes('Priest')) {
+                actorClass = 'Priest';
+                firstElement = firstElement.replace('Priest', '');
+            }
+            else if (firstElement.includes('Diacon')) {
+                actorClass = 'Diacon';
+                firstElement = firstElement.replace('Diacon', '');
+            }
             if (firstElement == idsArray[0] || firstElement == idsArray[1]) {
                 // if we find an array wich first element equals firstElement (i.e., we find an Array = ['prayerID', 'text in Arabic', 'text in French', 'text in English']), we create a newDiv to represent the text in this subArray
                 row = document.createElement('div');
                 row.classList.add('TargetRow');
+                if (actorClass) {
+                    row.classList.add(actorClass);
+                }
                 row.id = firstElement;
+                if (languages[0] == 'COP') {
+                    prayer.reverse();
+                    prayer.splice(prayer.length - 1, 1);
+                    prayer.unshift(firstElement);
+                }
+                ;
                 for (let x = 1; x < prayer.length; x++) {
-                    lang = languages[x - 1];
+                    lang = orderdLanguages[x - 1];
                     //we check that the language is included in allLanguages, i.e. if it has not been removed by the user which means that he does not want it to be displayed. If the language is not removed, we retrieve the text in this language. otherwise we will not retrieve its text.
                     if (allLanguages.indexOf(lang) != -1) {
                         el = document.createElement('p');
@@ -249,7 +277,7 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
                 }
                 ;
             }
-        }
+        });
     }
     ;
 }
@@ -358,15 +386,14 @@ function createButtonsForEachSubPrayers(prayerRootID, parentBtn) {
     uniqueTitles.map(t => createBtn(t));
     //creating a Button for each unique title after giving its inner text the text in arabic and French
     function createBtn(uTitle) {
-        let btn = {};
+        let btn = new Button('', '');
         //btn.parentBtn = btnMassUnBaptised;
-        btn.text = { AR: "", FR: "" };
         btn.prayers = [uTitle.replace('Title', '')];
         btn.onClick = () => { showPrayers(btn.prayers, btn.prayersArray, btn.languages); };
         //setting the text.AR value of btn from the first 'p' element of the div having and id = uTitle + "AR"
-        btn.text.AR = document.getElementById(uTitle + 'AR').querySelectorAll('p')[0].innerText;
+        btn.label.AR = document.getElementById(uTitle + 'AR').querySelectorAll('p')[0].innerText;
         //setting the text.FR value of btn from the first 'p' element of the div having and id = uTitle + "FR"
-        btn.text.FR = document.getElementById(uTitle + 'FR').querySelectorAll('p')[0].innerText;
+        btn.label.FR = document.getElementById(uTitle + 'FR').querySelectorAll('p')[0].innerText;
         showChildButtonsOrPrayers(btn, false);
     }
     //adding a goBack button at the end
@@ -560,13 +587,15 @@ function showChildButtonsOrPrayers(btn, clear) {
     function createBtn(btn) {
         let newBtn = document.createElement('button');
         newBtn.classList.add('btnIcon');
-        for (let lang in btn.text) {
+        for (let lang in btn.label) {
             //for each language in btn.text, we create a new "p" element
-            let btnLable = document.createElement('p');
-            //we edit the p element by adding its innerText (=btn.text[lang], and its class)
-            editBtnInnerText(btnLable, btn.text[lang], "btnLable" + lang);
-            //we append the "p" element  to the newBtn button
-            newBtn.appendChild(btnLable);
+            if (btn.label[lang]) {
+                let btnLable = document.createElement('p');
+                //we edit the p element by adding its innerText (=btn.text[lang], and its class)
+                editBtnInnerText(btnLable, btn.label[lang], "btnLable" + lang);
+                //we append the "p" element  to the newBtn button
+                newBtn.appendChild(btnLable);
+            }
         }
         ;
         newDiv.appendChild(newBtn);

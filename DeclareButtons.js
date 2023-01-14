@@ -1,245 +1,53 @@
-const btnMain = {
-    text: { FR: "Retour au menu principal", AR: "العودة إلى القائمة الرئيسية", EN: "Back to the main menu" }
-};
-const btnGoBack = {
-    text: { FR: 'Retour', AR: 'السابق', EN: "Go Back" }
-};
-const btnMass = {
-    rootID: 'Mass',
-    text: { FR: "Messes", AR: "القداسات" }
-};
-const btnIncenseOffice = {
-    text: {
-        FR: "Office des Encens Aube et Soir",
-        AR: " رفع بخور باكر أو عشية"
+class Button {
+    constructor(labelAR, labelFR, labelEN, rootID, parentBtn, children, prayers, prayersArray, languages, onClick, value) {
+        this.label = { FR: "", AR: "", EN: "" };
+        this.label.AR = labelAR;
+        this.label.FR = labelFR;
+        this.label.EN = labelEN;
+        this.rootID = rootID;
+        this.parentBtn = parentBtn;
+        this.children = children;
+        this.prayers = prayers;
+        this.prayersArray = prayersArray;
+        this.languages = languages;
+        this.onClick = onClick;
+        this.value = value;
     }
-};
-const btnIncenseDawn = {
-    text: {
-        FR: "Encens Aube",
-        AR: "بخور باكر"
-    },
-    prayers: ['ActionDeGraceDate=0000', "PrayerCommonOurFatherWhoArtInHeavenDate=0000",
-        "PrayerCommonThanksGivingPart1Date=0000",
-        "PrayerCommonEprosEvEksastiDate=0000",
-        "PrayerCommonThanksGivingPart3Date=0000",
-        "PrayerCommonShlilAndResponseDate=0000",
-        "PrayerCommonEriniPassiAndResponseDate=0000",
-        "PrayerCommonLitanyForTheSickDate=0000",
-        "PrayerCommonLitanyOfTravellersDate=0000",
-        "PrayerCommonLitanyOfOfferingDate=0000",
-        "PrayerLitanyOfTheDepartedDate=0000",
-        "PrayerCommonFalNosabe7Date=0000",
-        "PrayerCommonAguiosOsEosDate=0000",
-        "CommonOurFatherWhoArtInHeavenDate=0000",
-        "PrayerCommonWeExaltYouDate=0000",
-        "PrayerDoxologiesStMaryDate=0000",
-        "PrayerDoxologiesArchangeMichelDate=0000",
-        "PrayerDoxologiesCelestialBeingsDate=0000",
-        "EncensAubeDoxologieApostlesDate=0000",
-        "EncensAubeDoxologieSaintMarcDate=0000",
-        "EncensAubeDoxologieSaintGeorgeDate=0000",
-        "EncensAubeDoxologieSaintMinaDate=0000",
-        "EncensAubeDoxologiesEndDate=0000",
-        "CommonNousExaltonsMarieDate=0000",
-        "EncensAubeEfnotiNaynanDate=0000",
-        "CommonEvangilePrayerDate=0000",
-        "CommonEvangileIntroductionLevonsNousDate=0000",
-        "CommonEvangileIntroductionBeniSoitCeluiQuiVientDate=0000",
-        "CommonEvangileResponseDate=0000",
-        "CommonBlockKhinBiEkhrestosIsosBinShoysDate=0000",
-        "EncensBakerTa7lilDate=0000",
-        "CommonAminAllelouyaDate=0000",
-        "MesseCommonGloireEtHonneurDate=0000",
-        "MesseCommonRoshoumatEl7amalDate=0000",
-        "MesseCommonTa7lilDate=0000"]
-};
-const btnIncenseVespers = {
-    text: {
-        FR: "Encens Soir",
-        AR: "بخور عشية"
-    },
-    //prayers: addElementsToStringArray(Prayers.EncensVepersPrayers, [Readings.BibleEvening + Readings.Psalm, Readings.BibleEvening])
-};
-const btnMassStCyril = {
-    rootID: 'StCyril',
-    parentBtn: btnMass,
-    text: { FR: "Saint Cyril",
-        AR: "كيرلسي" },
-    prayers: BaptizedMassPrayers
-};
-const btnMassStGregory = {
-    rootID: 'StGregory',
-    text: { FR: "Saint Gregory",
-        AR: "غريغوري" },
-    prayers: BaptizedMassPrayers
-};
-const btnMassStBasil = {
-    rootID: 'StBasil',
-    text: { FR: "Saint Basil",
-        AR: "باسيلي"
-    },
-    prayers: BaptizedMassPrayers
-};
-const btnMassStJean = {
-    rootID: 'StJean',
-    text: { FR: "Saint Jean",
-        AR: "القديس يوحنا"
-    },
-    prayers: BaptizedMassPrayers
-};
-const btnMassOfferingOfTheLamb = {
-    text: { FR: "Présentation de l'Agneau",
-        AR: "تقديم الحمل" }
-};
-const btnMassRoshoumat = {
-    rootID: 'Roshoumat',
-    text: { FR: "Roshoumat El Hamal", AR: "رشومات الحمل" }
-};
-const btnMassUnBaptised = {
-    rootID: 'UnBaptised',
-    text: { FR: "Messe des non baptisés",
-        AR: "قداس الموعوظين",
-        EN: "Unbaptised Mass"
-    },
-};
-const btnMassBaptised = {
-    rootID: 'Baptised',
-    children: [btnMassStBasil, btnMassStCyril, btnMassStGregory, btnMassStJean],
-    text: { FR: "Messe des Croyans",
-        AR: "قداس المؤمنين" },
-    parentBtn: btnMass
-};
-const btnFractionPrayers = {
-    text: { FR: "Fraction",
-        AR: "صلوات القسمة" },
-};
-const btnMassReadings = {
-    rootID: '',
-    text: { FR: "Lectures",
-        AR: "القراءات" },
-    prayers: [Readings.StPaul, Readings.Katholikon, Readings.Praxis, Readings.Synaxarium, Readings.GospelMass]
-};
-const btnDayReadings = {
-    text: { FR: "Lectures du jour",
-        AR: "قراءات اليوم",
-        EN: 'Day\'s Readings'
-    },
-    //prayers: [Readings.StPaul],
-    //prayersArray:ReadingsArray,
-    //languages: readingsLanguages,
-};
-const btnReadingsStPaul = {
-    text: { FR: "Epître de Saint Paul",
-        AR: "البولس",
-        EN: 'Pauline Epistle'
-    },
-    prayers: [Readings.StPaul],
-    prayersArray: StPaulArray,
-    languages: readingsLanguages,
-};
-const btnReadingsKatholikon = {
-    text: { FR: "katholikon",
-        AR: "الكاثوليكون"
-    },
-    prayers: [Readings.Katholikon],
-    prayersArray: KatholikonArray,
-    languages: readingsLanguages,
-    parentBtn: btnMassReadings,
-};
-const btnReadingsSynaxarium = {
-    text: { FR: "Synaxarium",
-        AR: "السنكسار"
-    },
-    prayers: [Readings.Synaxarium],
-    prayersArray: SynaxariumArray,
-    languages: readingsLanguages,
-    parentBtn: btnMassReadings,
-};
-const btnReadingsPraxis = {
-    text: { FR: "Praxis",
-        AR: "الإبركسيس"
-    },
-    prayers: [Readings.Praxis],
-    prayersArray: PraxisArray,
-    languages: readingsLanguages,
-    parentBtn: btnMassReadings,
-};
-const btnReadingsGospelMass = {
-    text: { FR: "l'Evangile",
-        AR: "إنجيل القداس"
-    },
-    prayers: [Readings.GospelMass + Readings.Psalm, Readings.GospelMass],
-    prayersArray: GospelMassArray,
-    languages: readingsLanguages,
-    parentBtn: btnMassReadings,
-};
-const btnReadingsGospelIncenseVespers = {
-    text: { FR: "Evangile  Vêpres",
-        AR: "إنجيل عشية"
-    },
-    prayers: [Readings.GospelVespers + Readings.Psalm, Readings.GospelVespers],
-    prayersArray: GospelVespersArray,
-    languages: readingsLanguages,
-    parentBtn: btnIncenseVespers
-};
-const btnReadingsGospelIncenseDawn = {
-    text: { FR: "Evangile Aube",
-        AR: "إنجيل باكر"
-    },
-    prayers: [Readings.GospelDawn + Readings.Psalm, Readings.GospelDawn],
-    prayersArray: GospelDawnArray,
-    languages: readingsLanguages,
-    parentBtn: btnIncenseDawn
-};
-const btnReadingsGospelNight = {
-    text: { FR: "Evangile Soir",
-        AR: "إنجيل المساء"
-    },
-    prayers: [Readings.GospelNight + Readings.Psalm, Readings.GospelNight],
-    prayersArray: GospelNightArray,
-    languages: readingsLanguages,
-    parentBtn: btnIncenseVespers
-};
-const btnReadingsPropheciesDawn = {
-    text: { FR: "Prophecies Matin",
-        AR: "نبوات باكر"
-    },
-    prayers: [Readings.PropheciesDawn],
-    prayersArray: PropheciesDawnArray,
-    languages: readingsLanguages,
-    parentBtn: btnIncenseDawn
-};
-const btnHeteneyat = {
-    text: { FR: "Heteneyat",
-        AR: "الهيتنيات" },
-    parentBtn: btnMassUnBaptised
-};
-const btnPraxisResponse = {
-    text: { FR: "Réponse Praxis",
-        AR: "مرد الإبركسيس" },
-    parentBtn: btnMassReadings
-};
-const btnMassGospelResponse = {
-    text: { FR: "Réponse Evangile",
-        AR: "مرد الإنجيل" },
-    parentBtn: btnMassReadings
-};
-const btnMassReconciliation = {
-    text: { FR: "Reconcilation",
-        AR: "صلاة الصلح" },
-    parentBtn: btnMassReadings
-};
-const btnMassAnaphora = {
-    text: { FR: "Anaphora",
-        AR: "الأنافورة" },
-    parentBtn: btnMassReadings
-};
-const btnMassCommunion = {
-    text: { FR: "Communion",
-        AR: "التوزيع" },
-    parentBtn: btnMassReadings
-};
+    ;
+}
+;
+const btnMain = new Button("العودة إلى القائمة الرئيسية", "Retour au menu principal", "Back to the main menu");
+const btnGoBack = new Button("السابق", "Retour", "Go Back");
+const btnMass = new Button("القداسات", "Messes");
+const btnIncenseOffice = new Button("رفع بخور باكر أو عشية", "Office des Encens Aube et Soir");
+const btnIncenseDawn = new Button('بخور باكر', 'Encens Aube', undefined, undefined, undefined, undefined, IncenseDawnPrayers, PrayersArray, prayersLanguages);
+const btnIncenseVespers = new Button("بخور عشية", 'Saint Cyril');
+const btnMassStCyril = new Button("كيرلسي", "Encens Soir", undefined, 'StCyril', btnMass, undefined, BaptizedMassPrayers);
+const btnMassStGregory = new Button("غريغوري", "Saint Gregory", undefined, 'StGregory', btnMass, undefined, BaptizedMassPrayers);
+const btnMassStBasil = new Button('باسيلي', 'Saint Basil', undefined, 'StBasil', btnMass, undefined, BaptizedMassPrayers);
+const btnMassStJean = new Button('القديس يوحنا', 'Saint Jean', undefined, 'StJean', btnMass, undefined, BaptizedMassPrayers);
+const btnMassOfferingOfTheLamb = new Button('تقديم الحمل', "Présentation de l'Agneau");
+const btnMassRoshoumat = new Button('رشومات الحمل', "Roshoumat El Hamal");
+const btnMassUnBaptised = new Button('قداس الموعوظين', 'Messe des non baptisés', 'Unbaptised Mass');
+const btnMassBaptised = new Button('قداس المؤمنين', 'Messe des Croyants', 'Baptized Mass', undefined, btnMass, [btnMassStBasil, btnMassStCyril, btnMassStGregory, btnMassStJean]);
+const btnFractionPrayers = new Button('صلوات القسمة', 'Fraction');
+const btnMassReadings = new Button('القراءات', 'Lectures', undefined, undefined, undefined, undefined, [Readings.StPaul, Readings.Katholikon, Readings.Praxis, Readings.Synaxarium, Readings.GospelMass]);
+const btnDayReadings = new Button("قراءات اليوم", "Lectures du jour", 'Day\'s Readings');
+const btnReadingsStPaul = new Button('البولس', 'Epître de Saint Paul', 'Pauline Epistle', undefined, undefined, undefined, [Readings.StPaul], StPaulArray, readingsLanguages);
+const btnReadingsKatholikon = new Button('الكاثوليكون', 'Katholikon', undefined, undefined, undefined, undefined, [Readings.Katholikon], KatholikonArray, readingsLanguages);
+const btnReadingsPraxis = new Button('الإبركسيس', 'Praxis', undefined, undefined, undefined, undefined, [Readings.Praxis], PraxisArray, readingsLanguages);
+const btnReadingsSynaxarium = new Button('السنكسار', 'Synaxarium', undefined, undefined, undefined, undefined, [Readings.Synaxarium], SynaxariumArray, readingsLanguages);
+const btnReadingsGospelMass = new Button('إنجيل القداس', 'l\'Evangile', 'Gospel', undefined, undefined, undefined, [Readings.GospelMass + Readings.Psalm, Readings.GospelMass], GospelMassArray, readingsLanguages);
+const btnReadingsGospelIncenseVespers = new Button('إنجيل عشية', 'Evangile  Vêpres', 'Vespers Gospel', undefined, undefined, undefined, [Readings.GospelVespers + Readings.Psalm, Readings.GospelVespers], GospelVespersArray, readingsLanguages);
+const btnReadingsGospelIncenseDawn = new Button('إنجيل باكر', 'Evangile Aube', 'Vespers Gospel', undefined, undefined, undefined, [Readings.GospelDawn + Readings.Psalm, Readings.GospelDawn], GospelDawnArray, readingsLanguages);
+const btnReadingsGospelNight = new Button('إنجيل المساء', 'Evangile Soir', 'Vespers Gospel', undefined, btnIncenseVespers, undefined, [Readings.GospelNight + Readings.Psalm, Readings.GospelNight], GospelNightArray, readingsLanguages);
+const btnReadingsPropheciesDawn = new Button("نبوات باكر", 'Propheties Matin', undefined, undefined, btnIncenseDawn, undefined, [Readings.PropheciesDawn], PropheciesDawnArray, readingsLanguages);
+const btnHeteneyat = new Button('الهيتنيات', 'Heteneyat');
+const btnPraxisResponse = new Button('مرد الإبركسيس', 'Réponse Praxis');
+const btnMassGospelResponse = new Button('مرد الإنجيل', 'Réponse Evangile');
+const btnMassReconciliation = new Button('صلاة الصلح', 'Reconcilation');
+const btnMassAnaphora = new Button('الأنافورة', 'Anaphora');
+const btnMassCommunion = new Button('التوزيع', 'Communion');
 btnMain.children = [btnMass, btnIncenseOffice, btnDayReadings];
 btnMass.children = [btnIncenseDawn, btnMassOfferingOfTheLamb, btnMassRoshoumat, btnMassUnBaptised, btnMassBaptised];
 btnMassUnBaptised.children = [btnReadingsStPaul, btnReadingsKatholikon, btnReadingsPraxis, btnReadingsSynaxarium, btnReadingsGospelMass];
