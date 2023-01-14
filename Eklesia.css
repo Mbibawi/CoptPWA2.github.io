@@ -15,9 +15,9 @@
 .CA,
 .Title,
 .PrayerText {
+  font-size: 15pt;
   width: 50%;
   text-align: justify;
-  min-height: 0rem;
 }
 .AR,
 .CA {
@@ -54,22 +54,7 @@
 .PrayerText,
 .Title {
   padding: 1vw 1vw;
-  margin: 0vw 0vw;
-}
-.TargetDiv {
-  display: flex;
-  flex-direction: column;
-  margin: 3px 3px;
-  flex-basis: 0;
-  width: 100%;
-}
-.TargetDivCOP,
-.TargetDivAR,
-.TargetDivFR,
-.TargetDivEN,
-.TargetDivCA {
-  display: flex;
-  flex-direction: column;
+  margin: 2vw 2vw;
 }
 .TargetRow {
   display: flex;
