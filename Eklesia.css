@@ -15,18 +15,20 @@
 .CA,
 .Title,
 .PrayerText {
-  font-size: 15pt;
   width: 50%;
   text-align: justify;
 }
 .AR,
 .CA {
+  font-size: 14pt;
   direction: rtl !important;
+}
+.FR,
+.EN {
+  font-size: 14pt;
 }
 .COP {
   font-family: "Coptic Eyes Coptic", sans-serif;
-  /* font-family: 'Coptic Eyes Latin', sans-serif; */
-  /* font-weight: bold; */
 }
 .Menu {
   background-color: #5270a3;
@@ -55,6 +57,10 @@
 .Title {
   padding: 1vw 1vw;
   margin: 2vw 2vw;
+}
+.Title {
+  font-weight: bold;
+  font-size: 12pt;
 }
 .TargetRow {
   display: flex;
