@@ -208,7 +208,7 @@ function showPrayers(prayers, prayersArray, languages) {
     closeSideBar();
 }
 ;
-function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
+function retrievePrayersFromAnArray(btnPrayersArray, prayerID, languages) {
     let date, orderdLanguages;
     orderdLanguages = [...languages];
     if (orderdLanguages[0] == 'COP') {
@@ -221,7 +221,7 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
     retrieve(idsArray);
     function retrieve(idsArray) {
         let firstElement, row, actorClass = undefined;
-        PrayersArray.map((p) => {
+        btnPrayersArray.map((p) => {
             let prayer = [...p];
             firstElement = prayer[0];
             if (firstElement.includes('Assembly')) {
