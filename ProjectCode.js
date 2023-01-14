@@ -213,21 +213,15 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
     //idsArray.map(id => retrieve(id))
     retrieve(idsArray);
     function retrieve(idsArray) {
-        let firstElement, container, row;
-        // container = document.createElement('div');
-        //container.innerHTML = document.getElementById('TemplateTargetDiv').innerHTML;
-        //container.classList.add('TargetDiv');
+        let firstElement, row;
         for (let prayer of prayersArray) {
             //for each array in the prayersArray, we set firstElement as the text of the first element of each array
             firstElement = prayer[0];
             if (firstElement == idsArray[0] || firstElement == idsArray[1]) {
                 // if we find an array wich first element equals firstElement (i.e., we find an Array = ['prayerID', 'text in Arabic', 'text in French', 'text in English']), we create a newDiv to represent the text in this subArray
-                //newDiv = document.createElement('div');
-                //newDiv.id = firstElement;
-                //newDiv.classList.add('TargetDiv');
-                //newDiv.innerHTML = template.innerHTML;
                 row = document.createElement('div');
                 row.classList.add('TargetRow');
+                row.id = firstElement;
                 for (let x = 1; x < prayer.length; x++) {
                     lang = languages[x - 1];
                     //we check that the language is included in allLanguages, i.e. if it has not been removed by the user which means that he does not want it to be displayed. If the language is not removed, we retrieve the text in this language. otherwise we will not retrieve its text.
@@ -247,8 +241,6 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
                         //container.getElementsByClassName('TargetDiv' + lang)[0].appendChild(el);
                     }
                     else {
-                        //el = container.getElementsByClassName('TargetDiv' + lang)[0] as HTMLElement;
-                        //el.style.display = 'none';
                         console.log('The lanugage is not one of the languages set by the user: ', lang);
                     }
                     ;
