@@ -1,6 +1,6 @@
 //CONSTANTS
 const calendarDay = 24 * 60 * 60 * 1000; //this is a day in milliseconds
-const mainDiv = document.getElementById('TargetDiv');
+const containerDiv = document.getElementById('TargetDiv');
 const sideBar = document.getElementById('sidebar');
 const contentDiv = document.getElementById('content');
 const sideBarBtn = document.getElementById('opensidebar');
