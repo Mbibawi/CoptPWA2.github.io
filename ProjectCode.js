@@ -11,7 +11,7 @@ const copticReadingsDates = getCopticReadingsDates();
 toggleDevBtn.addEventListener('click', () => openDev(toggleDevBtn));
 function removeLanguage(lang) {
     //we need to start by emptying the  div ending with the language that wille be removed (eg.: if we are removing English, we empty 'TargetDivEN') because it will not be emptied by the showPrayers method
-    let l = document.getElementById(mainDiv.id + lang);
+    let l = document.getElementById(containerDiv.id + lang);
     if (l) {
         l.innerHTML = "";
     }
@@ -56,11 +56,11 @@ function addLanguage(lang) {
     allLanguages.push(lang);
     return;
     //the following will not work. I will to think it out again
-    for (let i = 0; i < mainDiv.children.length; i++) {
-        if (mainDiv.children[i].children.length > 0) {
+    for (let i = 0; i < containerDiv.children.length; i++) {
+        if (containerDiv.children[i].children.length > 0) {
             //it means that there is a text shown in the the TragetDiv
             //we will retrieve the id of the first html element
-            let id = mainDiv.children[i].children[0].getAttribute('id');
+            let id = containerDiv.children[i].children[0].getAttribute('id');
             id.includes('Date=0000') ? id = id.split('Date=000')[0] + 'Date=0000' : id = id.split('Date=')[0];
             showPrayerInAllLanguagesForAGivenID(id, allLanguages);
             break;
@@ -198,7 +198,7 @@ function showPrayers(prayers, prayersArray, languages) {
     }
     //we empty the subdivs of the mainDiv before populating them with the new text
     //allLanguages.map(l => document.getElementById(mainDiv.id + l).innerHTML = "");
-    mainDiv.innerHTML = "";
+    containerDiv.innerHTML = "";
     //loop in through each id root and showing the prayer text and title:
     //prayers.map(prayer => showPrayerInAllLanguagesForAGivenID(prayer, languages));
     prayers.map(prayer => retrievePrayersFromAnArray(prayersArray, prayer, languages));
@@ -213,49 +213,47 @@ function retrievePrayersFromAnArray(prayersArray, prayerID, languages) {
     //idsArray.map(id => retrieve(id))
     retrieve(idsArray);
     function retrieve(idsArray) {
-        let firstElement;
-        let template = document.getElementById('TemplateTargetDiv'), newDiv;
-        //we will make the inner Html of the newly created 'template' element, equal to the innerHtml of the mainDiv: i.e., it will include a child for each language: 'TargetDivFR, TargetDivAR, etc.'
-        //prayersArray is an Array of string arrays (string[][]) in which the text we want to display by clicking on the button, is found. For example, PraxisArray is an array including all the Praxis text. It is the array in which we look for text when we click btnReadingsPraxis
-        for (let i = 0; i < prayersArray.length; i++) {
+        let firstElement, container, row;
+        // container = document.createElement('div');
+        //container.innerHTML = document.getElementById('TemplateTargetDiv').innerHTML;
+        //container.classList.add('TargetDiv');
+        for (let prayer of prayersArray) {
             //for each array in the prayersArray, we set firstElement as the text of the first element of each array
-            firstElement = prayersArray[i][0];
+            firstElement = prayer[0];
             if (firstElement == idsArray[0] || firstElement == idsArray[1]) {
                 // if we find an array wich first element equals firstElement (i.e., we find an Array = ['prayerID', 'text in Arabic', 'text in French', 'text in English']), we create a newDiv to represent the text in this subArray
-                newDiv = document.createElement('div');
-                newDiv.id = firstElement;
-                newDiv.classList.add('TargetDiv');
-                newDiv.innerHTML = template.innerHTML;
-                //now the newDiv has the same childs as mainDiv, i.e., it has a child for each language (TargetDivAR, TargetDivFR, TargetDivEN, etc.)
-                for (let x = 0; x < prayersArray[i].length; x++) {
+                //newDiv = document.createElement('div');
+                //newDiv.id = firstElement;
+                //newDiv.classList.add('TargetDiv');
+                //newDiv.innerHTML = template.innerHTML;
+                row = document.createElement('div');
+                row.classList.add('TargetRow');
+                for (let x = 1; x < prayer.length; x++) {
+                    lang = languages[x - 1];
                     //we check that the language is included in allLanguages, i.e. if it has not been removed by the user which means that he does not want it to be displayed. If the language is not removed, we retrieve the text in this language. otherwise we will not retrieve its text.
-                    if (allLanguages.indexOf(languages[x]) != -1) {
+                    if (allLanguages.indexOf(lang) != -1) {
+                        el = document.createElement('p');
                         if (firstElement.includes('Title')) {
-                            el = document.createElement('div');
                             el.classList.add('Title');
                         }
                         else {
-                            el = document.createElement('p');
                             el.classList.add('PrayerText');
                         }
                         ;
-                        lang = languages[x];
-                        text = prayersArray[i][x + 1];
+                        text = prayer[x];
                         el.classList.add(lang);
                         el.innerText = text;
-                        for (let c = 0; c < newDiv.children.length; c++) {
-                            if (newDiv.children[c].id == 'TargetDiv' + lang) {
-                                newDiv.children[c].appendChild(el);
-                                break;
-                            }
-                            ;
-                        }
+                        row.appendChild(el);
+                        //container.getElementsByClassName('TargetDiv' + lang)[0].appendChild(el);
                     }
                     else {
+                        //el = container.getElementsByClassName('TargetDiv' + lang)[0] as HTMLElement;
+                        //el.style.display = 'none';
                         console.log('The lanugage is not one of the languages set by the user: ', lang);
                     }
                     ;
-                    mainDiv.appendChild(newDiv);
+                    //mainDiv.appendChild(container)
+                    containerDiv.appendChild(row);
                 }
                 ;
             }
@@ -315,9 +313,9 @@ function getTextAndAppendElementToMainDiv(elID) {
         //we add the language as a class to the class list
         prayer.classList.add(lang);
         //we also use the language letters (AR, FR, COP, etc.) to identifiy the element to which the "prayer" child will be appended
-        if (document.getElementById(mainDiv.id + lang)) {
+        if (document.getElementById(containerDiv.id + lang)) {
             prayer.setAttribute('id', elID);
-            document.getElementById(mainDiv.id + lang).appendChild(prayer);
+            document.getElementById(containerDiv.id + lang).appendChild(prayer);
         }
         ;
     }

@@ -1,9 +1,6 @@
 .Container {
   display: flex;
-  /* flex: 1 1 auto; */
   flex-direction: column;
-  justify-content: stretch;
-  align-items: center;
 }
 .Content {
   margin: 5px 5px;
@@ -18,6 +15,7 @@
 .CA,
 .Title,
 .PrayerText {
+  width: 50%;
   text-align: justify;
   min-height: 0rem;
 }
@@ -55,18 +53,28 @@
 }
 .PrayerText,
 .Title {
-  display: flex;
   padding: 1vw 1vw;
   margin: 0vw 0vw;
-  align-items: flex-start;
 }
 .TargetDiv {
   display: flex;
-  flex-basis: 0%;
-  flex-direction: row;
-  align-items: flex-start;
-  flex-flow: nowrap;
+  flex-direction: column;
   margin: 3px 3px;
+  flex-basis: 0;
+  width: 100%;
+}
+.TargetDivCOP,
+.TargetDivAR,
+.TargetDivFR,
+.TargetDivEN,
+.TargetDivCA {
+  display: flex;
+  flex-direction: column;
+}
+.TargetRow {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
 }
 .Priest {
   background-color: #0593b3;
