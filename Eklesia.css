@@ -67,14 +67,26 @@
   flex-direction: row-reverse;
   align-items: flex-start;
 }
-.Priest {
+.Priest,
+#PriestColor {
   background-color: #5cbdd3;
 }
-.Diacon {
+.Diacon,
+#DiaconColor {
   background-color: #91a07d;
 }
-.Assembly {
+.Assembly,
+#AssemblyColor {
   background-color: #ece3b7;
+}
+
+.colorbtn,
+.btns {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 3pt;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
 .showDate {
