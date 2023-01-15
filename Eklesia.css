@@ -6,8 +6,12 @@
   margin: 5px 5px;
 }
 .Title {
-  font-style: italic !important;
-  color: chocolate !important;
+  /* font-style: italic !important; */
+  color: rgb(45, 71, 100) !important;
+  font-weight: bold;
+  font-size: 11pt !important;
+  text-align: center !important;
+  padding: 2px 4px;
 }
 .AR,
 .FR,
@@ -58,26 +62,26 @@
   padding: 0vw 0vw;
   margin: 1vw 1vw;
 }
-.Title {
-  font-weight: bold;
-  font-size: 12pt;
-}
 .TargetRow {
   display: flex;
   flex-direction: row-reverse;
   align-items: flex-start;
 }
+.TargetRowTitle {
+  background-color: rgb(167, 172, 171) !important;
+  margin-top: 10px;
+}
 .Priest,
 #PriestColor {
-  background-color: #b8f2ff;
+  background-color: #d9f5fc;
 }
 .Diacon,
 #DiaconColor {
-  background-color: #e1f7c4;
+  background-color: #e0ecd0;
 }
 .Assembly,
 #AssemblyColor {
-  background-color: #fff8d2;
+  background-color: #fdf9e2;
 }
 
 .colorbtn,

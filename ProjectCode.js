@@ -209,24 +209,21 @@ function showPrayers(prayers, prayersArray, languages) {
 }
 ;
 function retrievePrayersFromAnArray(btnPrayersArray, prayerID, languages) {
-    let date, orderdLanguages;
-    orderdLanguages = [...languages];
-    if (orderdLanguages[0] == 'COP') {
-        orderdLanguages.reverse();
-    }
+    let date;
     prayerID.includes('Date=0000') ? date = '' : date = "Date=" + copticReadingsDate;
-    let idsArray = [], text, el, lang;
+    let idsArray = [];
     idsArray.push(prayerID + date + 'Title', prayerID + date);
     //idsArray.map(id => retrieve(id))
     retrieve(idsArray);
     function retrieve(idsArray) {
-        let firstElement, row, actorClass = undefined;
+        let firstElement, row, el, actorClass = undefined, text, lang;
         btnPrayersArray.map((p) => {
+            //we take each prayer in the prayers sequence attached to the button in its 'prayers' property, then we clone the 'prayer' array   
             let prayer = [...p];
-            firstElement = prayer[0];
+            firstElement = prayer[0]; //this is the id by which we will find the text of the prayer in the PrayersArray attached to the button as a property
             if (firstElement.includes('Assembly')) {
                 actorClass = 'Assembly';
-                firstElement = firstElement.replace('Assembly', '');
+                firstElement = firstElement.replace('Assembly', ''); //we remove the word Assembly beacuse PrayersArray does not include this information about the color of the prayer. We add a class to express the fact that this is a prayer chanted by the Assembly. We do the same for 'Priest' and 'Diacon'.
             }
             else if (firstElement.includes('Priest')) {
                 actorClass = 'Priest';
@@ -237,42 +234,45 @@ function retrievePrayersFromAnArray(btnPrayersArray, prayerID, languages) {
                 firstElement = firstElement.replace('Diacon', '');
             }
             if (firstElement == idsArray[0] || firstElement == idsArray[1]) {
-                // if we find an array wich first element equals firstElement (i.e., we find an Array = ['prayerID', 'text in Arabic', 'text in French', 'text in English']), we create a newDiv to represent the text in this subArray
+                // if we find an array wich first element equals firstElement (i.e., we find an Array constructed according to this model = ['prayer', 'prayer text in Arabic', 'prayer text in French', ' prayer text in English']), we create a newDiv to represent the text in this subArray
                 row = document.createElement('div');
-                row.classList.add('TargetRow');
+                row.classList.add('TargetRow'); //we add a class to this div
+                row.id = firstElement; //we give it as id the 'prayer id'
                 if (actorClass) {
                     row.classList.add(actorClass);
-                }
-                row.id = firstElement;
-                if (languages[0] == 'COP') {
-                    prayer.reverse();
-                    prayer.splice(prayer.length - 1, 1);
-                    prayer.unshift(firstElement);
+                    actorClass = undefined; //we reset it to avoid that it remains unchanged in the loop
+                    //                    prayer.reverse();
+                    //                  prayer.splice(prayer.length - 1, 1);
+                    //                prayer.unshift(firstElement)
                 }
                 ;
                 for (let x = 1; x < prayer.length; x++) {
-                    lang = orderdLanguages[x - 1];
-                    //we check that the language is included in allLanguages, i.e. if it has not been removed by the user which means that he does not want it to be displayed. If the language is not removed, we retrieve the text in this language. otherwise we will not retrieve its text.
+                    lang = languages[x - 1]; //we select the language in the langauges array, starting from 0 not from 1.
+                    //we check that the language is included in the allLanguages array, i.e. if it has not been removed by the user, which means that he does not want this language to be displayed. If the language is not removed, we retrieve the text in this language. otherwise we will not retrieve its text.
                     if (allLanguages.indexOf(lang) != -1) {
+                        //we create a new p element for the text of each language in the 'prayer' array, which is constructed like ['prayer id', 'AR, 'FR', 'COP']
                         el = document.createElement('p');
                         if (firstElement.includes('Title')) {
+                            //this means that the 'prayer' array includes the titles of the prayer. We add a class 'Title' to the newly created p element. 
                             el.classList.add('Title');
+                            row.classList.add('TargetRowTitle');
                         }
                         else {
+                            //The 'prayer' array includes a paragraph of ordinary core text of the array. We give it 'PrayerText' as class
                             el.classList.add('PrayerText');
                         }
                         ;
-                        text = prayer[x];
-                        el.classList.add(lang);
-                        el.innerText = text;
-                        row.appendChild(el);
-                        //container.getElementsByClassName('TargetDiv' + lang)[0].appendChild(el);
+                        el.classList.add(lang); //we add the language as a class in order to be able to set the font properties for each langauge
+                        el.innerText = prayer[x]; //x starts from 1 beacuse 0 is the prayer id
+                        row.appendChild(el); //the row now has a p elements for each language in the 'prayer' array (i.e., it has as many p elements as the number of elements in the orderedLanguages array)
                     }
                     else {
                         console.log('The lanugage is not one of the languages set by the user: ', lang);
                     }
                     ;
-                    //mainDiv.appendChild(container)
+                    if (languages[0] == 'COP') {
+                        row.style.flexDirection = 'row'; //this is in order to show the Arabic text on the right hand, then Coptic in Arabic letters, etc, ie. [AR, CA, FR, COP] instead of [COP, FR, CA, AR]
+                    }
                     containerDiv.appendChild(row);
                 }
                 ;
