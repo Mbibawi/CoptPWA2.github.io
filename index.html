@@ -70,19 +70,13 @@
                         </div>
                         <!-- Change Date -->
                         <p class="comment">You can  manually change the  calendar date and the corresponding coptic date by clicking on "Next Coptic Day" or "Previous Coptic Day"</p>
-                        <p class="comment">You can also set  the calendar date to a specific date by typing the date in this format "Date=yyyy-mm-dd" and clicking on "Next Coptic Date" or "Previous Coptic Date"</p>
+                        <p class="comment">You can also set  the calendar date to a specific date by typing the date in this format "Date=yyyy-mm-dd" and press Enter</p>
                         <div id='changeCopticDay'>
                                 <button type="submit" id="nextDay" size="10" style='background-color: rgb(33, 175, 175);' onclick="changeDay(true)">Next Coptic Day</button>
                                 <button type="submit" id="previousDay" size="10" style='background-color: rgb(33, 175, 175);' onclick="changeDay(false)">Previous Coptic Day</button>
                         </div>
-                        <button onclick="showPrayers(['getfromtextbox'])" style="margin-top: 7px; background-color: coral;">Show Prayers</button>
                         <div id="showCurrentDate" class="showDate"></div>
-                        <h3 style="color: cadetblue; font-style: italic;">Below will be displayed the content of the prayers as appended divs to the "TargetDiv" </h3>
-                        <div id='addOrRemoveLanguages'  style="padding: 7px;">
-                                <button id='removeLanguage' onclick='removeOrAddLanguageWithButton(false)' style="background-color: cadetblue;">Remove Language</button>
-                                <button id='addLanguage' onclick='removeOrAddLanguageWithButton(true)' style="background-color: cadetblue;">Add Language</button>
-                                <div id='showList'></div>
-                        </div>
+                        <p class='comment';>Below will be displayed the content of the prayers as appended divs to the "TargetDiv" </p>
                 </div>
         <!-- Main area -->
                 <div id='main'>

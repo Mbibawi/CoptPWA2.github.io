@@ -8,19 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const copticReadingsDates = getCopticReadingsDates();
-toggleDevBtn.addEventListener('click', () => openDev(toggleDevBtn));
-function removeLanguage(lang) {
-    //we need to start by emptying the  div ending with the language that wille be removed (eg.: if we are removing English, we empty 'TargetDivEN') because it will not be emptied by the showPrayers method
-    let l = document.getElementById(containerDiv.id + lang);
-    if (l) {
-        l.innerHTML = "";
+document.getElementById('elID').addEventListener('keypress', (e) => {
+    let el = e.target;
+    if (e.key == 'Enter' && el.value.startsWith('Date=')) {
+        changeDay(true);
     }
-    ;
-    //then we remove the language from the array
-    allLanguages.splice(allLanguages.indexOf(lang), 1);
-    return allLanguages;
-}
-;
+});
+toggleDevBtn.addEventListener('click', () => openDev(toggleDevBtn));
 function addOrRemoveLanguage(el) {
     let lang;
     lang = el.id.split('add')[1]; //we remove 'add' from the element id, which gives us the letters of the language to be added or removed, eg.: 'AR', 'EN', etc.
@@ -32,55 +26,6 @@ function addOrRemoveLanguage(el) {
         allLanguages.push(lang);
         el.innerText = el.innerText.replace('Add', 'Remove');
     }
-}
-//this function will be depricated 
-function removeOrAddLanguageWithButton(r, btn) {
-    let listDiv = document.getElementById('showList');
-    let list, el;
-    if (!r) {
-        list = listDiv.appendChild(document.createElement('ul'));
-        allLanguages.map(l => {
-            el = document.createElement('li');
-            el.innerText = 'Click to remove ' + l;
-            el.addEventListener('click', () => {
-                removeLanguage(l);
-                listDiv.innerHTML = '';
-            });
-            list.appendChild(el);
-        });
-        el = document.createElement('li');
-        el.innerText = "Don't remove any language";
-        el.addEventListener('click', () => list.innerHTML = '');
-        list.appendChild(el);
-    }
-    else if (r) {
-        el = listDiv.appendChild(document.createElement('input'));
-        el.addEventListener('keypress', (ev) => {
-            if (ev.key === 'Enter') {
-                ev.preventDefault();
-                addLanguage(el.value);
-                listDiv.innerHTML = '';
-            }
-        });
-    }
-    ;
-}
-function addLanguage(lang) {
-    allLanguages.push(lang);
-    return;
-    //the following will not work. I will to think it out again
-    for (let i = 0; i < containerDiv.children.length; i++) {
-        if (containerDiv.children[i].children.length > 0) {
-            //it means that there is a text shown in the the TragetDiv
-            //we will retrieve the id of the first html element
-            let id = containerDiv.children[i].children[0].getAttribute('id');
-            id.includes('Date=0000') ? id = id.split('Date=000')[0] + 'Date=0000' : id = id.split('Date=')[0];
-            showPrayerInAllLanguagesForAGivenID(id, allLanguages);
-            break;
-        }
-    }
-    ;
-    return allLanguages;
 }
 ;
 setCopticDates();
@@ -97,7 +42,7 @@ function changeDay(next, days = 1) {
     let currentDate = todayDate.getTime();
     let input = document.getElementById('elID');
     if (input && input.value.startsWith('Date=')) {
-        currentDate = new Date(input.value.slice(5)).getTime();
+        currentDate = new Date(input.value.split('Date=')[1]).getTime();
         todayDate.setTime(currentDate);
         input.value = "";
         console.log(todayDate);
@@ -164,6 +109,7 @@ function autoRunOnLoad() {
     //PWA();
 }
 ;
+//this will be depricated, it was to test the performance when the text was retrieved from hidden html elements instead from an array 
 function appendRepeatable(elID) {
     //this is a temporary function in order to test the performance with a big number of loaded elements
     let repeat = document.getElementById(elID);
