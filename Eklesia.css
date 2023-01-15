@@ -69,6 +69,11 @@
   border-radius: 5px;
   margin-bottom: 1px;
 }
+.addLang {
+  background-color: rgba(161, 9, 29, 0.705);
+  border-radius: 20px;
+  font-family: "Times New Roman", Times, serif;
+}
 .TargetRowTitle {
   background-color: rgb(228, 229, 145) !important;
   margin-top: 15px;
@@ -95,7 +100,7 @@
   flex-direction: row;
   align-items: stretch;
   padding: 3pt;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-family: "Times New Roman", Times, serif;
 }
 
 .showDate {

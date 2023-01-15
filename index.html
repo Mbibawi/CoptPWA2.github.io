@@ -75,8 +75,6 @@
                                 <button type="submit" id="nextDay" size="10" style='background-color: rgb(33, 175, 175);' onclick="changeDay(true)">Next Coptic Day</button>
                                 <button type="submit" id="previousDay" size="10" style='background-color: rgb(33, 175, 175);' onclick="changeDay(false)">Previous Coptic Day</button>
                         </div>
-        <!--                 <select id="Menu" class="Menu">*
-                        </select> -->
                         <button onclick="showPrayers(['getfromtextbox'])" style="margin-top: 7px; background-color: coral;">Show Prayers</button>
                         <div id="showCurrentDate" class="showDate"></div>
                         <h3 style="color: cadetblue; font-style: italic;">Below will be displayed the content of the prayers as appended divs to the "TargetDiv" </h3>
@@ -90,6 +88,11 @@
                 <div id='main'>
                         <div id='btns' class='btns'>
                                 <button id="opensidebar" class="openbtn" onclick='openSideBar()'>&#9776; Open Sidebar</button>
+
+                                <button id='addCA' onclick='addOrRemoveLanguage(this)' class='addLang'>Add Coptic In Arabic Charachters</button>
+
+                                <button id='addEN' onclick='addOrRemoveLanguage(this)' class='addLang'>Add English</button>
+                                
                                 <button id="PriestColor" class='colorbtn'>                               <p>Le Prêtre/</p>
                                         <p>The Priest/</p>
                                         <p>الكاهن </p></button>
