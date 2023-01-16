@@ -8,11 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const copticReadingsDates = getCopticReadingsDates();
+//this is temporary in order to change the date manually by entering a date in the text box
 document.getElementById('elID').addEventListener('keypress', (e) => {
     let el = e.target;
     if (e.key == 'Enter' && el.value.startsWith('Date=')) {
-        changeDay(true);
+        changeDay(el.value.split('Date=')[1]);
     }
+});
+document.getElementById('datePicker').addEventListener('change', (e) => {
+    let el = e.target;
+    console.log('date value = ', el.value.toString());
+    changeDay(el.value.toString());
 });
 toggleDevBtn.addEventListener('click', () => openDev(toggleDevBtn));
 function addOrRemoveLanguage(el) {
@@ -35,16 +41,16 @@ function setCopticDates(today) {
     copticMonth = copticDate.slice(2, 4);
     copticDay = copticDate.slice(0, 2);
     copticReadingsDate = setCopticReadingsDate(copticDate);
+    todayString = todayDate.getDate() + '-' + todayDate.getMonth() + '-' + todayDate.getFullYear();
     showDates();
 }
 ;
-function changeDay(next, days = 1) {
+function changeDay(date = undefined, next = true, days = 1) {
     let currentDate = todayDate.getTime();
-    let input = document.getElementById('elID');
-    if (input && input.value.startsWith('Date=')) {
-        currentDate = new Date(input.value.split('Date=')[1]).getTime();
+    //let input = document.getElementById('elID') as HTMLInputElement
+    if (date) {
+        currentDate = new Date(date).getTime();
         todayDate.setTime(currentDate);
-        input.value = "";
         console.log(todayDate);
     }
     else {
@@ -214,8 +220,9 @@ function retrieveButtonPrayersFromItsPrayersArray(btnPrayersArray, prayerID, lan
                             el.classList.add('PrayerText');
                         }
                         ;
-                        el.classList.add(lang); //we add the language as a class in order to be able to set the font properties for each langauge
-                        el.innerText = prayer[x]; //x starts from 1 beacuse prayer[0] is the prayer id
+                        el.classList.add(lang); //we add the language as a class in order to be able to set the font 
+                        text = prayer[x];
+                        el.textContent = text; //x starts from 1 beacuse prayer[0] is the prayer id
                         row.appendChild(el); //the row which is a <div></div>, will encapsulate a <p></p> element for each language in the 'prayer' array (i.e., it will have as many <p></p> elements as the number of elements in the 'prayer' array)
                     }
                     else {

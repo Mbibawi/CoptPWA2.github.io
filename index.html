@@ -62,15 +62,24 @@
                 <div id='Dev' class = 'Dev' style="display: none;">
                         <div id='InstallPWA' class='btnIcon' role = 'button'>Install PWA            
                         </div>
+                        <!-- Change Date -->
+                        <p class="comment">You can  manually change the  calendar date and the corresponding coptic date by clicking on "Next Coptic Day" or "Previous Coptic Day"</p>
+                        <p class="comment">You can also set  the calendar date to a specific date either by picking a date in the date picker, or by typing the date in this format "Date=yyyy-mm-dd" and press Enter</p>
+
+                        <div>
+                                <label for="start">Set the date:</label>
+                                <input type="date" id="datePicker" name="trip-start"
+                                value=${todayDate}  
+                                min="1900-01-01" max="2200-12-31">
+                        </div>
                         <div id="ProvideIDFromInput">
                                 <label for="elIdLable">Element ID (manually submit and element ID):
                                 <input type="text" id="elID" name="elID" required
                                 minlength="0" maxlength="100" size="10" accept="text">
                                 </label>
                         </div>
-                        <!-- Change Date -->
-                        <p class="comment">You can  manually change the  calendar date and the corresponding coptic date by clicking on "Next Coptic Day" or "Previous Coptic Day"</p>
-                        <p class="comment">You can also set  the calendar date to a specific date by typing the date in this format "Date=yyyy-mm-dd" and press Enter</p>
+
+
                         <div id='changeCopticDay'>
                                 <button type="submit" id="nextDay" size="10" style='background-color: rgb(33, 175, 175);' onclick="changeDay(true)">Next Coptic Day</button>
                                 <button type="submit" id="previousDay" size="10" style='background-color: rgb(33, 175, 175);' onclick="changeDay(false)">Previous Coptic Day</button>
@@ -80,10 +89,9 @@
                 </div>
         <!-- Main area -->
                 <div id='main'>
-                        <div id='btns' class='btns'>
-                                <button id="opensidebar" class="openbtn" onclick='openSideBar()'>&#9776; Open Sidebar</button>
-
-                                <button id='addCA' onclick='addOrRemoveLanguage(this)' class='addLang'>Add Coptic In Arabic Charachters</button>
+                        <button id="opensidebar" class="openbtn" onclick='openSideBar()'>&#9776; Open Sidebar</button>
+                        <div id='btns' class='btns'>                
+                                <button id='addCA' onclick='addOrRemoveLanguage(this)' class='addLang'>Add Coptic In Arabic Characters</button>
 
                                 <button id='addEN' onclick='addOrRemoveLanguage(this)' class='addLang'>Add English</button>
                                 

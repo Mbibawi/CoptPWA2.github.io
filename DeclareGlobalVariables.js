@@ -1,4 +1,16 @@
-//CONSTANTS
+//CONSTAvar giakiAR: string = "أتيت ";
+//const giakiAR: string = 'أتيت';
+//const giakiFR: string = 'es venus';
+//const giakiEN: string = 'have come';
+//const giakiCA: string = 'آك إي';
+//const giakiCOP: string = 'ⲁⲕ̀';
+const giaki = {
+    AR: 'أتيت',
+    CA: 'آك إي',
+    FR: 'es venus',
+    EN: '\'ve come',
+    COP: 'ⲁⲕ̀\''
+};
 const calendarDay = 24 * 60 * 60 * 1000; //this is a day in milliseconds
 const containerDiv = document.getElementById('TargetDiv');
 const sideBar = document.getElementById('sidebar');
@@ -142,6 +154,7 @@ const PrayersTree = {
 };
 //VARS
 var todayDate;
+var todayString;
 var allLanguages = ['AR', 'FR', 'COP'];
 var allDivs;
 var copticDate, copticMonth, copticDay, copticReadingsDate;

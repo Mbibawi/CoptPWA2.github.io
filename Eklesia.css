@@ -71,8 +71,10 @@
 }
 .addLang {
   background-color: rgba(161, 9, 29, 0.705);
-  border-radius: 20px;
+  border-radius: 10px;
   font-family: "Times New Roman", Times, serif;
+  width: 10vmax;
+  padding: 3pt;
 }
 .TargetRowTitle {
   background-color: rgb(228, 229, 145) !important;
@@ -94,7 +96,6 @@
   background-color: #fdf9e2;
 }
 
-.colorbtn,
 .btns {
   display: flex;
   flex-direction: row;
@@ -102,7 +103,11 @@
   padding: 3pt;
   font-family: "Times New Roman", Times, serif;
 }
-
+.colorbtn {
+  border-radius: 10px;
+  padding: 3pt;
+  font-size: 9pt !important;
+}
 .showDate {
   color: #5270a3;
   font-weight: bold;
@@ -183,4 +188,20 @@
   .sidebar a {
     font-size: 18px;
   }
+}
+label {
+  display: inline;
+  font: 1rem;
+  font-family: "Times New Roman", Times, serif;
+}
+#datePicker {
+  display: inline;
+  width: 20vw;
+  height: 5vw;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  background-color: rgb(55, 211, 211);
+}
+#ProvideIDFromInput {
+  padding-top: 5vw;
 }
