@@ -1,9 +1,3 @@
-//CONSTAvar giakiAR: string = "أتيت ";
-//const giakiAR: string = 'أتيت';
-//const giakiFR: string = 'es venus';
-//const giakiEN: string = 'have come';
-//const giakiCA: string = 'آك إي';
-//const giakiCOP: string = 'ⲁⲕ̀';
 const giaki = {
     AR: 'أتيت',
     CA: 'آك إي',
