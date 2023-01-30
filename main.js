@@ -236,7 +236,7 @@ function retrieveButtonPrayersFromItsPrayersArray(btnPrayersArray, prayerID, lan
             }
             if (firstElement == idsArray[0] ||
                 firstElement == idsArray[1]) {
-                // if we find an array wich first element equals firstElement (i.e., we find an Array constructed according to this model = ['idsArray[0] || idsArray[1]', 'prayer text in Arabic', 'prayer text in French', ' prayer text in English'], note that the langauges and their sequence is not the same in all the PrayersArrays declared. The languages depends on the source from which the text was retrieved), we create a newDiv to represent the text in this subArray
+                // if we find an array which first element equals firstElement (i.e., we find an Array constructed according to this model = ['idsArray[0] || idsArray[1]', 'prayer text in Arabic', 'prayer text in French', ' prayer text in English'], note that the languages and their sequence is not the same in all the PrayersArrays declared. The languages depends on the source from which the text was retrieved), we create a newDiv to represent the text in this subArray
                 row = document.createElement("div");
                 row.classList.add("TargetRow"); //we add 'TargetRow' class to this div
                 row.id = prayer[0]; //we give it as id the 'prayer id'
@@ -259,8 +259,10 @@ function retrieveButtonPrayersFromItsPrayersArray(btnPrayersArray, prayerID, lan
                             el.classList.add("PrayerText");
                         }
                         el.classList.add(lang); //we add the language as a class in order to be able to set the font
+                        el.dataset.lang = lang;
                         text = prayer[x];
                         el.textContent = text; //x starts from 1 beacuse prayer[0] is the prayer id
+                        el.addEventListener('dblclick', (event) => toggleClassListForAllChildrenOFAnElement(event, 'fullScreenText')); //adding a double click eventListner that amplifies the text size of the chosen language;
                         row.appendChild(el); //the row which is a <div></div>, will encapsulate a <p></p> element for each language in the 'prayer' array (i.e., it will have as many <p></p> elements as the number of elements in the 'prayer' array)
                     }
                     else {
@@ -1133,3 +1135,21 @@ function DetectFingerSwipe() {
         yDown = null;
     }
 }
+function toggleClassListForAllChildrenOFAnElement(ev, myClass) {
+    let el = ev.target;
+    let haveDataLang = containerDiv.querySelectorAll('[data-lang]');
+    for (let i = 0; i < haveDataLang.length; i++) {
+        if (haveDataLang[i].attributes.getNamedItem('data-lang').value == el.attributes.getNamedItem('data-lang').value) {
+            toggleClassList(haveDataLang[i], myClass);
+        }
+    }
+}
+function toggleClassList(el, myClass) {
+    if (!el.classList.contains(myClass)) {
+        el.classList.add(myClass);
+    }
+    else if (el.classList.contains(myClass)) {
+        el.classList.remove(myClass);
+    }
+}
+;
