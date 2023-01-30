@@ -18,7 +18,7 @@
 .COP,
 .CA,
 .Title,
-.PrayerText {
+.PrayerText{
   width: 50%;
   text-align: justify;
 }
@@ -189,7 +189,7 @@
     font-size: 18px;
   }
 }
-label {
+.label {
   display: inline;
   font: 1rem;
   font-family: "Times New Roman", Times, serif;
@@ -204,4 +204,8 @@ label {
 }
 #ProvideIDFromInput {
   padding-top: 5vw;
+}
+.fullScreenText{
+  width:180vw !important;
+  font-size: x-large;
 }
