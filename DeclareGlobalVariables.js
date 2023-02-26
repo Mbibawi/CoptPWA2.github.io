@@ -1,13 +1,7 @@
-const giaki = {
-    AR: 'أتيت',
-    CA: 'آك إي',
-    FR: 'es venus',
-    EN: '\'ve come',
-    COP: 'ⲁⲕ̀\''
-};
 const calendarDay = 24 * 60 * 60 * 1000; //this is a day in milliseconds
 const containerDiv = document.getElementById('TargetDiv');
-const sideBar = document.getElementById('sidebar');
+const leftSideBar = document.getElementById('leftSideBar');
+const rightSideBar = document.getElementById('rightSideBar');
 const contentDiv = document.getElementById('content');
 const sideBarBtn = document.getElementById('opensidebar');
 const toggleDevBtn = document.getElementById('toggleDev');
@@ -26,6 +20,8 @@ var GospelNightArray = [];
 var PropheciesDawnArray = [];
 var ReadingsArray = [];
 var readingsLanguages = ['AR', 'FR', 'EN'];
+var GospelResponse;
+var PsalmResponse;
 const Readings = {
     BibleIntroFR: '',
     BibleIntroAR: 'قفوا بخوف أمام الله لنسمع الإنجيل المقدس، فصل من بشارة الإنجيل لمعلمنا مار ــــــــــ البشير، والتلميذ الطاهر، بركاته على جميعنا',
@@ -73,7 +69,18 @@ const CommonPrayers = {
     LitanyOfTheAssemblies: 'LitanyOfTheAssemblies',
     BowYourHeads: "BowYourHeadsToTheLord"
 };
+const ReconciliationPrayers = ['MassNameReconciliationPart1', 'MassNameReconciliationPart2', 'MassNameReconciliatonPart3'];
 const BaptizedMassPrayers = [CommonPrayers.LitanyOfPeace, CommonPrayers.LitanytoTheFathers, CommonPrayers.LitanyOfTheAssemblies, CommonPrayers.Creed, 'PrayerOfReconciliation', 'Anaphora', 'Agios', 'InstitutionNarrative', CommonPrayers.LitanyOfPeace, CommonPrayers.LitanytoTheFathers, 'LitanyOfEkliros', 'LitanyOfThePlace', 'LitanyOfTheSeedsAndHerbs', 'LitanyOfTheOblations', 'CommemorationOfTheSaints', 'IntroductionToTheFraction', 'FractionPrayer', CommonPrayers.OurFather, 'PriestConfession', 'DeaconConfession', 'Communinon'];
+const Seasons = {
+    StMaryFast: 'SaintMaryFast',
+    GreatLent: 'GreatLent',
+    FiftyHolyDays: 'Pentecostal',
+    JonahFast: 'JonahFast',
+    ApostlesFast: 'ApostlesFast',
+    Resurrection: 'Resurrection',
+    Nayrouz: 'Nayrouz',
+    CrossFeast: 'CrossFeast',
+};
 //this was meant to provide a kind of intellisense for building the prayers array of a button, but it is not used
 const PrayersTree = {
     //liturgies
@@ -90,7 +97,7 @@ const PrayersTree = {
     Sections: {
         Common: "Common",
         Readings: "Readings",
-        Prayer: "Ousheya",
+        Prayer: "Litany",
         MassStBasil: "StBasil",
         MassStCyril: "StCyril",
         MassStGregory: "StGregory",
@@ -115,7 +122,7 @@ const PrayersTree = {
         KetoEpnevmatiSo: "KetoEpnevmati",
         HolyGodofSabaoth: "HolySabaoth",
         Malades: "SickPrayer",
-        NousTeLouons: "NousTeLouons",
+        NousTeLouons: "WePraiseYou",
         OurFatherInHeavens: "OurFather",
         Reconciliation: "Reconciliation",
         RendonsGrace: "RendonsGrace",
@@ -151,4 +158,4 @@ var todayDate;
 var todayString;
 var allLanguages = ['AR', 'FR', 'COP'];
 var allDivs;
-var copticDate, copticMonth, copticDay, copticReadingsDate;
+var copticDate, copticMonth, copticDay, copticReadingsDate, season;

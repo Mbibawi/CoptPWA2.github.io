@@ -29,13 +29,6 @@ document
         changeDay(el.value.split("Date=")[1]);
     }
 });
-/* function loadPrayersFromScript(jsFileName: string) {
-    let script = async () => {
-        let resp = await fetch(jsFileName + '.js');
-        return await eval(await resp.text())
-    }
-   return script();
-}; */
 document
     .getElementById("datePicker")
     .addEventListener("change", (e) => {
@@ -60,9 +53,27 @@ setCopticDates();
 function setCopticDates(today) {
     today ? (todayDate = today) : (todayDate = new Date());
     copticDate = convertGregorianDateToCopticDate(todayDate);
+    season = copticDate;
     copticMonth = copticDate.slice(2, 4);
-    copticDay = copticDate.slice(0, 2);
     copticReadingsDate = setCopticReadingsDate(copticDate);
+    copticDay = copticDate.slice(0, 2);
+    if (copticReadingsDate.includes('GreatLent')) {
+        //if we are a Sunday or a Saturday, the Gospel Response is different than in week days
+        todayDate.getDay() == 0 || todayDate.getDay() == 6 ? GospelResponse = 'GreatLentSundays' : GospelResponse = 'GreatLent#';
+    }
+    else if (Number(copticDay) == 29) {
+        GospelResponse = '2900';
+    }
+    else if (Number(copticMonth) == 12 && Number(copticDay) < 16) {
+        //We are during the month of Misra where the Virigin's fast falls 
+        GospelResponse = '0112';
+    }
+    else {
+        GospelResponse = copticDate;
+    }
+    ;
+    //The PsalmResponse is the same as the GospelResponse	
+    PsalmResponse = GospelResponse;
     todayString =
         todayDate.getDate() +
             "-" +
@@ -71,6 +82,7 @@ function setCopticDates(today) {
             todayDate.getFullYear();
     showDates();
 }
+;
 function changeDay(date = undefined, next = true, days = 1) {
     let currentDate = todayDate.getTime();
     //let input = document.getElementById('elID') as HTMLInputElement
@@ -81,15 +93,16 @@ function changeDay(date = undefined, next = true, days = 1) {
     }
     else {
         if (next) {
-            todayDate.setTime(currentDate + days * calendarDay);
+            todayDate.setTime(currentDate + (days * calendarDay));
         }
         else if (!next) {
-            todayDate.setTime(currentDate - days * calendarDay);
+            todayDate.setTime(currentDate - (days * calendarDay));
         }
     }
     setCopticDates(todayDate);
     return todayDate;
 }
+;
 function showDates() {
     let showDates = document.getElementById("showCurrentDate");
     showDates.innerText =
@@ -102,21 +115,15 @@ function showDates() {
             ". And the copticReadingsDate =" +
             copticReadingsDate;
 }
-function addElementsToStringArray(strArray, elements) {
-    let newArray = strArray;
-    for (let i = 0; i < elements.length; i++) {
-        newArray.push(elements[i]);
-    }
-    return newArray;
-}
+;
 //not used anymore since we are now using array instead of hidden html
 let appendExractedHtml = () => {
     //parseHtmlFile('htmlPrayers.html', 'hiddenPrayers')
     //parseHtmlFile('htmlReadings.html', 'hiddenReadings');
 };
-//not used anymore since we are now using array instead of hidden html
 function parseHtmlFile(htmlFileName, elID) {
     return __awaiter(this, void 0, void 0, function* () {
+        //not used anymore since we are now using array instead of hidden html
         let resp = yield fetch(htmlFileName);
         let el = document.getElementById(elID);
         let text = yield resp.text();
@@ -130,6 +137,7 @@ function parseHtmlFile(htmlFileName, elID) {
         return divs;
     });
 }
+;
 //not used anymore since we are now using array instead of hidden html
 document.addEventListener("DOMContentLoaded", appendExractedHtml);
 autoRunOnLoad();
@@ -144,7 +152,8 @@ function autoRunOnLoad() {
     //registerServiceWorker()
     //PWA();
 }
-//this will be depricated, it was to test the performance when the text was retrieved from hidden html elements instead from an array
+;
+//this will be e, it was to test the performance when the text was retrieved from hidden html elements instead from an array
 function appendRepeatable(elID) {
     //this is a temporary function in order to test the performance with a big number of loaded elements
     let repeat = document.getElementById(elID);
@@ -185,43 +194,58 @@ function appendRepeatable(elID) {
         hidden.appendChild(newDiv);
     }
 }
+;
 // getting a prayer from an ID directly provided in the text input
 function getPrayerFromInputBox() {
     let input = document.getElementById("elID");
     showPrayers([input.value], ReadingsArray, readingsLanguages);
 }
+;
 function showPrayers(prayers, prayersArray, languages) {
-    //we should get the date from a function that takes the date of today and matches is with the coptic date
-    //let prayer = setLiturgieProps(list.selectedOptions[0].value);
     if (prayers[0] == "") {
         //getting the selected option in the list if there is no id passed to the function
         let list = document.getElementById("Menu");
         prayers.push(list.selectedOptions[0].value);
     }
     else if (prayers[0] == "getfromtextbox") {
-        //this will be depricated, it was just for being able to retrieve a prayer by entering its id in the text box
+        //this will be e, it was just for being able to retrieve a prayer by entering its id in the text box
         let input = document.getElementById("elID");
         prayers[0] = input.value;
     }
     //we empty the subdivs of the containerDiv before populating them with the new text
     containerDiv.innerHTML = "";
-    //looping the 'prayers' property of the button (this property is a sequence of prayers ids) and for each 'prayer' in the 'prayers' array, we will check if there is an identic paryer id in the prayersArray (note that prayersArray is the array of text containing all the text in which the button may find its 'prayers'. There is an array containing all the Praxis readings, another one containing all the Gospel readings, another one containing all the prayers of the Mass, etc. The button specifies in which prayersArray its 'prayers' may be found)
-    prayers.map((prayerID) => retrieveButtonPrayersFromItsPrayersArray(prayersArray, prayerID, languages));
-    closeSideBar();
+    let rightTitlesDiv = rightSideBar.querySelector('#sideBarBtns'); //this is the right side bar where the titles are displayed for navigation purposes
+    rightSideBar.querySelector('#sideBarBtns').innerHTML = ''; //we empty the right side bar from any text
+    //looping the 'prayers' property of the button (this property is a sequence of prayers ids) and for each 'prayer' in the 'prayers' array, we will check if there is an identic prayer id in the prayersArray (note that prayersArray is the array of text containing all the text in which the button may find its 'prayers'. There is an array containing all the Praxis readings, another one containing all the Gospel readings, another one containing all the prayers of the Mass, etc. The button specifies in which prayersArray its 'prayers' may be found)
+    prayers.map((prayerID) => retrieveButtonPrayersFromItsPrayersArray(prayersArray, prayerID, languages, rightTitlesDiv));
+    closeSideBar(leftSideBar);
 }
-function retrieveButtonPrayersFromItsPrayersArray(btnPrayersArray, prayerID, languagesArray) {
-    let date, idsArray = [];
-    prayerID.includes("Date=0000")
-        ? (date = "")
-        : (date = "Date=" + copticReadingsDate); //if the id of the prayer include the value 'Date=0000' this tells us that this prayer is not linked to a specific day in the coptic calendar. We will not add the copticReadingsDate to the prayerID before looking for it in the btnPrayresArray
+function retrieveButtonPrayersFromItsPrayersArray(btnPrayersArray, prayerID, languagesArray, rightTitlesDiv) {
+    let date, idsArray = [], titlesArray = [];
+    if (prayerID.includes('Date=0000')) {
+        //if the id of the prayer include the value 'Date=0000' this tells us that this prayer is not linked to a specific day in the coptic calendar. We will not add the copticReadingsDate to the prayerID before looking for it in the btnPrayresArray
+        date = '';
+    }
+    else if (prayerID.includes('GospelResponse')) {
+        //this is the Gospel response, we add a date according to the season or feast
+        date = 'Date=' + GospelResponse; //we will set the GospelResponse variable so that it matches the season/feast (eg.: 'Resurrection", 'Nativity', 'Baptism', etc.)
+    }
+    else if (prayerID.includes('PsalmResponse')) {
+        //we do the same as Gospel response above
+        date = 'Date=' + PsalmResponse; //we will do the same for the PsalmResponse variable as for the GospelResponse variable
+    }
+    else {
+        date = 'Date=' + copticReadingsDate; //this is the default case where the date equals the copticReadingsDate. This works for most of the occasions.
+    }
+    ;
     idsArray.push(prayerID + date + "Title", prayerID + date); //we add 2 versions of the prayerID to the idsArray: the first version ends with 'Title', the second version does not end with 'Title' (this gives us an ids array like this ['aPrayerIDDate=0101Title', 'aPrayerIDDate=0101']). We will look for each version of the prayer id in the PrayersArray
     retrieve(idsArray);
     function retrieve(idsArray) {
         let firstElement, row, el, actorClass = undefined, text, lang;
         btnPrayersArray.map((p) => {
-            //we take each prayer (p) in the PrayersArray attached to the button in its 'PrayersArray' property, then we clone it in a new variable. Note that each prayer (p) is itself an array containg the prayerID as first element, and the text of the prayer in each language: p is constructed like ['prayerID', 'text in AR, 'text in FR', 'text in COP'], etc.
-            let prayer = [...p];
-            firstElement = prayer[0]; //this is the id by which we will find the text of the prayer in the PrayersArray attached to the button as a property
+            //we take each prayer (p) in the PrayersArray attached to the button in its 'PrayersArray' property, then we clone it in a new variable. Note that each prayer (p) is itself an array containing the prayerID as first element, and the text of the prayer in each language: p is constructed like ['prayerID', 'text in AR, 'text in FR', 'text in COP'], etc.
+            let prayers = [...p];
+            firstElement = prayers[0]; //this is the id by which we will find the text of the prayer in the PrayersArray attached to the button as a property
             if (firstElement.includes("Assembly")) {
                 actorClass = "Assembly";
                 firstElement = firstElement.replace("Assembly", ""); //we remove the word Assembly beacuse PrayersArray does not include this information about the color of the prayer. We add a class in order to reflect that this prayer is chanted by the Assembly, which will allow us to set the background color and other css of the html element accordingly. We do the same for 'Priest' and 'Diacon'.
@@ -234,17 +258,23 @@ function retrieveButtonPrayersFromItsPrayersArray(btnPrayersArray, prayerID, lan
                 actorClass = "Diacon";
                 firstElement = firstElement.replace("Diacon", "");
             }
+            ;
             if (firstElement == idsArray[0] ||
                 firstElement == idsArray[1]) {
                 // if we find an array which first element equals firstElement (i.e., we find an Array constructed according to this model = ['idsArray[0] || idsArray[1]', 'prayer text in Arabic', 'prayer text in French', ' prayer text in English'], note that the languages and their sequence is not the same in all the PrayersArrays declared. The languages depends on the source from which the text was retrieved), we create a newDiv to represent the text in this subArray
+                if (firstElement == idsArray[0]) {
+                    //this means that it is the title of the prayer. We add it to the titlesArray in order to show it in the right side bar later on
+                    titlesArray.push(prayers);
+                }
+                ;
                 row = document.createElement("div");
                 row.classList.add("TargetRow"); //we add 'TargetRow' class to this div
-                row.id = prayer[0]; //we give it as id the 'prayer id'
+                row.id = prayers[0]; //we give it as id the 'prayer id'
                 if (actorClass) {
                     row.classList.add(actorClass);
                     actorClass = undefined; //we reset it to avoid that it remains unchanged in the loop
                 }
-                for (let x = 1; x < prayer.length; x++) {
+                for (let x = 1; x < prayers.length; x++) {
                     lang = languagesArray[x - 1]; //we select the language in the button's langaugesArray, starting from 0 not from 1, that's why we start from x-1.
                     //we check that the language is included in the allLanguages array, i.e. if it has not been removed by the user, which means that he does not want this language to be displayed. If the language is not removed, we retrieve the text in this language. otherwise we will not retrieve its text.
                     if (allLanguages.indexOf(lang) != -1) {
@@ -260,31 +290,76 @@ function retrieveButtonPrayersFromItsPrayersArray(btnPrayersArray, prayerID, lan
                         }
                         el.classList.add(lang); //we add the language as a class in order to be able to set the font
                         el.dataset.lang = lang;
-                        text = prayer[x];
+                        text = prayers[x];
                         el.textContent = text; //x starts from 1 beacuse prayer[0] is the prayer id
                         el.addEventListener('dblclick', (event) => toggleClassListForAllChildrenOFAnElement(event, 'fullScreenText')); //adding a double click eventListner that amplifies the text size of the chosen language;
                         row.appendChild(el); //the row which is a <div></div>, will encapsulate a <p></p> element for each language in the 'prayer' array (i.e., it will have as many <p></p> elements as the number of elements in the 'prayer' array)
                     }
                     else {
-                        console.log("The lanugage is not one of the languages set by the user: ", lang);
+                        console.log("The language is not one of the languages set by the user: ", lang);
                     }
                     if (languagesArray[0] == "COP") {
-                        row.style.flexDirection = "row"; //this is in order to show the Arabic text on the right hand, followed by Coptic text in Arabic characters, etc, ie. [AR, CA, FR, COP]. If we keep their origina order as in the languagesArray (which is  [COP, FR, CA, AR]), the arabic paragraph will be displayed in the first column strarting from left to right, and the coptic paragraph will be on the last column from left to right
+                        row.style.flexDirection = "row"; //this is in order to show the Arabic text on the right hand, followed by Coptic text in Arabic characters, etc, ie. [AR, CA, FR, COP]. If we keep their original order as in the languagesArray (which is  [COP, FR, CA, AR]), the arabic paragraph will be displayed in the first column starting from left to right, and the coptic paragraph will be on the last column from left to right
                     }
                     containerDiv.appendChild(row);
                 }
             }
+            ;
         });
     }
+    ;
+    showTitlesInRightSideBar(titlesArray, rightTitlesDiv);
 }
-//Depricated - it was used when we were retrieving the text from hidden html elements
+;
+function showTitlesInRightSideBar(titlesArray, rightTitlesDiv) {
+    //this function shows the titles in the right side Bar
+    let newDiv, parag, text = '', suffix = 'SideBar', id;
+    titlesArray.map(t => addTitle(t));
+    function addTitle(t) {
+        id = t[0];
+        newDiv = document.createElement('div');
+        newDiv.id = id + suffix;
+        newDiv.classList.add(id + suffix);
+        //newDiv.addEventListener('click',
+        //	() => setFocus(id));
+        for (let i = 1; i < t.length; i++) {
+            if (t[i]) {
+                text = text + ' / ' + t[i];
+            }
+        }
+        ;
+        parag = document.createElement('p');
+        parag.innerText = text;
+        parag.classList.add('sideTitle');
+        newDiv.appendChild(parag);
+        parag.addEventListener('click', () => setFocus(id));
+        /* 		if (!rightSideBar) {
+                    rightSideBar = buildSideBar('rightSideBar')
+                } */
+        rightTitlesDiv.appendChild(newDiv);
+        text = '';
+    }
+    ;
+    function setFocus(id) {
+        for (let i = 1; i < containerDiv.children.length; i++) {
+            if (containerDiv.children[i].id == id) {
+                let target = containerDiv.children[i];
+                target.focus();
+                return;
+            }
+        }
+    }
+    ;
+}
+;
+//Deprecated - it was used when we were retrieving the text from hidden html elements
 function showPrayerInAllLanguagesForAGivenID(prayerID, langArray) {
     let date = "Date=" + copticReadingsDate;
     if (prayerID.includes("Date=0000")) {
         //this is the case where the prayer is not linked to a specific period or event
         date = "";
     }
-    //takes the ID of an htmelement, adds the word "Title" to it and one of the languages key letters (eg.: AR, FR, etc) to the ID (which gives an ID like "MesseStCyrilReconciliationTitleAR"), and retrievs the text of the html elment. Then repeats the same thing without adding the word "Title" (wich means that the ID is like "MesseStCyrilReconciliationAR")
+    //takes the ID of an htmelement, adds the word "Title" to it and one of the languages key letters (eg.: AR, FR, etc) to the ID (which gives an ID like "MesseStCyrilReconciliationTitleAR"), and retrieves the text of the html elment. Then repeats the same thing without adding the word "Title" (wich means that the ID is like "MesseStCyrilReconciliationAR")
     let idsArray = new Array();
     if (!langArray) {
         langArray = allLanguages;
@@ -297,7 +372,8 @@ function showPrayerInAllLanguagesForAGivenID(prayerID, langArray) {
     idsArray.map((id) => getTextAndAppendElementToMainDiv(id));
     // getTextAndAppendElementToMainDiv(prayerID) // we think this is useless, to be checked
 }
-//Depricated - it was used when we were retrieving the text from hidden html elements
+;
+//e - it was used when we were retrieving the text from hidden html elements
 function getTextAndAppendElementToMainDiv(elID) {
     let prayer;
     //we get the last 2 or 3 letters of the element ID, those characters represent  the language letters (eg.: AR, FR, COP etc)
@@ -334,7 +410,8 @@ function getTextAndAppendElementToMainDiv(elID) {
         }
     }
 }
-//Depricated - it was used when we were retrieving the text from hidden html elements
+;
+//e - it was used when we were retrieving the text from hidden html elements
 function getPrayerText(elID) {
     let id = elID.split("lang=")[0] + elID.split("lang=")[1];
     //gets the text of a given prayer by retrieving the html innerHTML of the specified html element
@@ -350,58 +427,14 @@ function getPrayerText(elID) {
         return undefined;
     }
 }
-function createButtonsForEachSubPrayers(prayerRootID, parentBtn) {
-    let allTitles = [];
-    let title;
-    let uniqueTitles = [];
-    for (let i = 1; i < allDivs.length; i++) {
-        if (allDivs[i].getAttribute("id") &&
-            allDivs[i].getAttribute("id").startsWith(prayerRootID) &&
-            allDivs[i].getAttribute("id").includes("Title")) {
-            allTitles.push(allDivs[i].getAttribute("id"));
-        }
-    }
-    for (let i = 1; i < allTitles.length; i++) {
-        if (allTitles[i].endsWith("AR")) {
-            title = allTitles[i].replace("AR", "");
-        }
-        else if (allTitles[i].endsWith("FR")) {
-            title = allTitles[i].replace("FR", "");
-        }
-        if (uniqueTitles.indexOf(title) == -1) {
-            uniqueTitles.push(title);
-        }
-    }
-    document.getElementById("subBtns").innerHTML = "";
-    uniqueTitles.map((t) => createBtn(t));
-    //creating a Button for each unique title after giving its inner text the text in arabic and French
-    function createBtn(uTitle) {
-        let btn = new Button("", "");
-        //btn.parentBtn = btnMassUnBaptised;
-        btn.prayers = [uTitle.replace("Title", "")];
-        btn.onClick = () => {
-            showPrayers(btn.prayers, btn.prayersArray, btn.languages);
-        };
-        //setting the text.AR value of btn from the first 'p' element of the div having and id = uTitle + "AR"
-        btn.label.AR = document
-            .getElementById(uTitle + "AR")
-            .querySelectorAll("p")[0].innerText;
-        //setting the text.FR value of btn from the first 'p' element of the div having and id = uTitle + "FR"
-        btn.label.FR = document
-            .getElementById(uTitle + "FR")
-            .querySelectorAll("p")[0].innerText;
-        showChildButtonsOrPrayers(btn, false);
-    }
-    //adding a goBack button at the end
-    //addGoBackBtn(parentBtn)
-}
+;
 function setCopticReadingsDate(coptDate) {
     let greatLentOrPentecostal = checkIfGreatLentOrPentecostalDays(todayDate);
     //console.log("greateLentOrPentcostal = ", greatLentOrPentecostal)
     if (greatLentOrPentecostal != "") {
         // it means we are either during the Great Lent period, or the Penstecostal 50 days, or any day/feast within these periods
         //console.log('we are within the Great  Lent period or the Pentecostal 50 days and the date returned by the function = ', greatLentOrPentecostal)
-        if (greatLentOrPentecostal.includes("GreatLent")) {
+        if (season == Seasons.GreatLent || season == Seasons.JonahFast) {
             if (btnDayReadings.children.indexOf(btnReadingsPropheciesDawn) == -1 &&
                 todayDate.getDay() != 0 &&
                 todayDate.getDay() != 6) {
@@ -433,7 +466,7 @@ function setCopticReadingsDate(coptDate) {
     else if (todayDate.getDay() == 0) {
         // it means we are on an ordinary  Sunday (any sunday other than Great lent and Pentecostal period Sundays)
         // console.log('We are on a sunday')
-        let sunday = checkWichSundayWeAre(Number(coptDate.slice(0, 2)));
+        let sunday = checkWhichSundayWeAre(Number(coptDate.slice(0, 2)));
         //the readings for the 5th sunday of any coptic month (other than the 5th sunday of the Great Lent or the Pentecostal Days) are the same. We will then retrieve the readings of the 5th sunday of the first coptic month (Tout)
         sunday == "5thSunday"
             ? (sunday = "01" + sunday)
@@ -450,7 +483,9 @@ function setCopticReadingsDate(coptDate) {
         return coptDate;
     }
 }
-function checkWichSundayWeAre(day) {
+;
+function checkWhichSundayWeAre(day) {
+    //this function returns a string like '1stSunday', '22ndSunday', '43rdSunday', etc.
     let n = Math.ceil(day / 7);
     let sunday = n.toString();
     if (n == 1 || (n > 20 && n % 10 == 1)) {
@@ -467,6 +502,7 @@ function checkWichSundayWeAre(day) {
     }
     return sunday;
 }
+;
 function convertGregorianDateToCopticDate(date) {
     let day = date.getDate();
     let month = date.getMonth() + 1; //we add one because the months count starts at 0
@@ -552,21 +588,40 @@ function convertGregorianDateToCopticDate(date) {
     return (getTwoDigitsStringFromNumber(coptDay) +
         getTwoDigitsStringFromNumber(coptMonth));
 }
+;
 function showChildButtonsOrPrayers(btn, clear) {
-    let newDiv = document.createElement("div");
+    //if (!leftSideBar) {
+    //	leftSideBar = buildSideBar('leftSideBar')
+    //}
+    let btnsDiv = leftSideBar.querySelector('#sideBarBtns');
+    let inlineBtnsDiv = document.getElementById('inlineBtns');
     if (clear) {
-        document.getElementById("subBtns").innerHTML = "";
+        btnsDiv.innerHTML = '';
+        inlineBtnsDiv.innerHTML = '';
     }
+    ;
+    if (btn.inlineBtns) {
+        btn.inlineBtns.map((b) => {
+            if (btn != btnGoBack) {
+                // for each child button that will be created, we set btn as its parent in case we need to use this property on the button
+                b.parentBtn = btn.parentBtn;
+            }
+            ;
+            createBtn(b, inlineBtnsDiv, b.cssClass);
+        });
+    }
+    ;
     if (btn.children) {
-        //it means the button has child buttons. It does not show prayer text when clicked but shows other buttons
         btn.children.map((c) => {
             if (btn != btnGoBack) {
                 // for each child button that will be created, we set btn as its parent in case we need to use this property on the button
                 c.parentBtn = btn;
             }
-            createBtn(c); //creating and showing a new html button element for each child
+            ;
+            createBtn(c, btnsDiv, c.cssClass); //creating and showing a new html button element for each child
         });
     }
+    ;
     if (btn.prayers && btn.prayersArray && btn.languages) {
         showPrayers(btn.prayers, btn.prayersArray, btn.languages);
     }
@@ -574,11 +629,13 @@ function showChildButtonsOrPrayers(btn, clear) {
         addGoBackButton(btn).addEventListener("click", () => showChildButtonsOrPrayers(btn.parentBtn, true));
     }
     if (btn !== btnMain) {
-        createBtn(btnMain);
+        createBtn(btnMain, btnsDiv, btn.cssClass);
     }
-    function createBtn(btn) {
-        let newBtn = document.createElement("button");
-        newBtn.classList.add("btnIcon");
+    ;
+    function createBtn(btn, btnsBar, btnClass) {
+        let newDiv = document.createElement("div");
+        let newBtn = document.createElement('button');
+        newBtn.classList.add(btnClass);
         for (let lang in btn.label) {
             //for each language in btn.text, we create a new "p" element
             if (btn.label[lang]) {
@@ -590,17 +647,17 @@ function showChildButtonsOrPrayers(btn, clear) {
             }
         }
         newDiv.appendChild(newBtn);
-        document.getElementById("subBtns").appendChild(newDiv);
+        btnsBar.appendChild(newDiv);
         if (btn.children || btn.prayers) {
             // if the btn object that we used to create the html button element, has childs, we add an "onclick" event that passes the btn itself to the showChildButtonsOrPrayers. This will create html button elements for each child and show them
-            newBtn.addEventListener("click", () => showChildButtonsOrPrayers(btn, true));
+            newBtn.addEventListener('click', () => showChildButtonsOrPrayers(btn, true));
         }
         return newBtn;
     }
     function addGoBackButton(btn) {
         btnGoBack.children = []; //we are emptying any childs of the btnGoBack button
         btnGoBack.children[0] = btn; // we are adding btn as a child to the btnGoBack;
-        return createBtn(btnGoBack); // we are creating a new html button element from btnGoBack. Since btnGoBack has as a sole child btn, when clicking on it, it will trigger the showButtons function (see the if(btn.childs) above. When triggered, the showButtons will show btn as a button);
+        return createBtn(btnGoBack, document.getElementById('sideBarBtns'), btnGoBack.cssClass); // we are creating a new html button element from btnGoBack. Since btnGoBack has as a sole child btn, when clicking on it, it will trigger the showButtons function (see the if(btn.childs) above. When triggered, the showButtons will show btn as a button);
     }
     function editBtnInnerText(el, text, btnClass) {
         el.innerText = text;
@@ -610,6 +667,7 @@ function showChildButtonsOrPrayers(btn, clear) {
         }
     }
 }
+;
 function checkIfGreatLentOrPentecostalDays(today) {
     let readingsDate = "";
     ResurrectionDates.map((d) => {
@@ -626,34 +684,39 @@ function checkIfGreatLentOrPentecostalDays(today) {
     });
     return readingsDate;
 }
+;
 function checkForUnfixedEvent(today, resDate, weekDay) {
-    let diffrence = (resDate - today) / calendarDay;
-    // console.log("The diffrence = ", diffrence, " and the dates are: Ressurection = ", new Date(resDate), " and Today = ", new Date(today), 'and today weekday =', new Date(today).getDay())
+    let difference = (resDate - today) / calendarDay;
+    // console.log("The difference = ", difference, " and the dates are: Resurrection = ", new Date(resDate), " and Today = ", new Date(today), 'and today weekday =', new Date(today).getDay())
     //console.log('weekday = ', weekDay)
-    if (diffrence == 0 || (diffrence == 1 && todayDate.getHours() > 15)) {
-        //If we are Saturday (which means that diffrence = 1) and we are after 3 PM, we will retrieve the readings of the Resurrection because we use to celebrate the Resurrection Mass on Saturday evening not on Sunday itself
-        return "Resurrection"; //we get the reading of Resurrection although we are still Saturday
+    if (difference == 0 || (difference == 1 && todayDate.getHours() > 15)) {
+        //If we are Saturday (which means that difference = 1) and we are after 3 PM, we will retrieve the readings of the Resurrection because we use to celebrate the Resurrection Mass on Saturday evening not on Sunday itself
+        season = Seasons.Resurrection;
+        return Seasons.Resurrection; //we get the reading of Resurrection although we are still Saturday
     }
-    else if (diffrence >= 1 && diffrence < 58) {
+    else if (difference >= 1 && difference < 58) {
         //We are during the Great Lent period which counts 56 days from the Saturday preceding the 1st Sunday (which is the begining of the so called "preparation week") until the Resurrection day
-        return isItSundayOrWeekDay("GreatLent", 58 - diffrence, weekDay);
+        season = Seasons.GreatLent;
+        return isItSundayOrWeekDay(Seasons.GreatLent, 58 - difference, weekDay);
     }
-    else if (diffrence > 57 && diffrence < 63) {
-        //We should be during the Jonah Feast
-        //We need to check the accuracy of the numbers (58 and 63)
-        //The Jonay feast starts 15 days before the beginig of the Great Lent
-        //I didn't find the readings for this period
-        return ""; //we will set it later
+    else if (difference > 65 && difference < 70) {
+        //We are in the Jonah Feast days (3 days + 1)
+        //The Jonay feast starts 15 days before the begining of the Great Lent
+        //I didn't find the readings for this period in the Power Point presentations
+        season = Seasons.JonahFast;
+        return isItSundayOrWeekDay(Seasons.JonahFast, Math.abs(70 - difference), weekDay);
     }
-    else if (diffrence < 0 && Math.abs(diffrence) < 50) {
+    else if (difference < 0 && Math.abs(difference) < 50) {
         // we are during the 50 Pentecostal days
-        console.log("We are in the Pentecostal period and the diffrence = ", diffrence);
-        return isItSundayOrWeekDay("Pentecostal", Math.abs(diffrence), weekDay);
+        console.log("We are in the Pentecostal period and the difference = ", difference);
+        season = Seasons.FiftyHolyDays;
+        return isItSundayOrWeekDay(Seasons.FiftyHolyDays, Math.abs(difference), weekDay);
     }
-    else if (diffrence < 0 && Math.abs(diffrence) > 50) {
+    else if (difference < 0 && Math.abs(difference) > 50) {
         if (Number(copticMonth) < 11 ||
             (Number(copticMonth) == 11 && Number(copticDay) < 5)) {
-            console.log("diffrece = apostles");
+            season = Seasons.ApostlesFast;
+            console.log("difference = apostles");
             // We are during the Apostles lent.
             //I didn't find specific readings for this period. I assume there are no specific reading and we follow the ordinary readings. This needs however to be checked that's why I kept this "else if" case
             return "";
@@ -666,18 +729,20 @@ function checkForUnfixedEvent(today, resDate, weekDay) {
         return "";
     }
 }
+;
 function isItSundayOrWeekDay(period, days, weekDay) {
     // let weekday: string = todayDate.toLocaleDateString('en-GB', { weekday: 'long' });
     //this returns the day of the week in English, eg.: Monday, Tuesday, etc.
     if (weekDay == 0) {
         //we are a Sunday
-        return period + checkWichSundayWeAre(days);
+        return period + checkWhichSundayWeAre(days);
     }
     else {
         // we are not a sunday
         return period + days.toString();
     }
 }
+;
 function PWA() {
     // Initialize deferredPrompt for use later to show browser install prompt.
     let deferredPrompt;
@@ -726,6 +791,7 @@ function PWA() {
         return "browser";
     }
 }
+;
 function registerServiceWorker() {
     const registerServiceWorker = () => __awaiter(this, void 0, void 0, function* () {
         if ("serviceWorker" in navigator) {
@@ -749,6 +815,7 @@ function registerServiceWorker() {
         }
     });
 }
+;
 function getCopticReadingsDates() {
     return [
         ["1903", "1307"],
@@ -1051,13 +1118,16 @@ function getCopticReadingsDates() {
         ["0301", "0311"],
     ];
 }
-function toggleSideBar(btn) {
-    let sideBar = document.getElementById("sideBar");
-    if (sideBar.style.width == "0px") {
-        openSideBar();
+;
+function toggleSideBars() {
+    if (leftSideBar.classList.contains('extended') && rightSideBar.classList.contains('collapsed')) {
+        closeSideBar(leftSideBar);
     }
-    else {
-        closeSideBar();
+    else if (rightSideBar.classList.contains('extended') && leftSideBar.classList.contains('collapsed')) {
+        closeSideBar(rightSideBar);
+    }
+    else if (leftSideBar.classList.contains('collapsed') && leftSideBar.classList.contains('collapsed')) {
+        openSideBar(leftSideBar);
     }
 }
 function openDev(btn) {
@@ -1072,26 +1142,33 @@ function closeDev(btn) {
     btn.removeEventListener("click", () => closeDev(btn));
     btn.addEventListener("click", () => openDev(btn));
 }
-function openSideBar() {
+;
+function openSideBar(sideBar) {
+    //containerDiv.appendChild(sideBar);
     let btnText = String.fromCharCode(9776) + "Close Sidebar";
-    let width = "190px";
+    let width = "20%";
     sideBar.style.width = width;
+    sideBar.classList.remove('collapsed');
+    sideBar.classList.add('extended');
     contentDiv.style.marginLeft = width;
     sideBarBtn.innerText = btnText;
-    sideBarBtn.removeEventListener("click", openSideBar);
-    sideBarBtn.addEventListener("click", closeSideBar);
-    //setCopticDates()
+    sideBarBtn.removeEventListener("click", () => openSideBar(sideBar));
+    sideBarBtn.addEventListener("click", () => closeSideBar(sideBar));
 }
+;
 /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-function closeSideBar() {
+function closeSideBar(sideBar) {
     let btnText = String.fromCharCode(9776) + "Open Sidebar";
-    let width = "0px";
+    let width = '0px';
     sideBar.style.width = width;
+    sideBar.classList.remove('extended');
+    sideBar.classList.add('collapsed');
     contentDiv.style.marginLeft = width;
     sideBarBtn.innerText = btnText;
-    sideBarBtn.removeEventListener("click", closeSideBar);
-    sideBarBtn.addEventListener("click", openSideBar);
+    sideBarBtn.removeEventListener("click", () => closeSideBar(sideBar));
+    sideBarBtn.addEventListener("click", () => openSideBar(sideBar));
 }
+;
 function DetectFingerSwipe() {
     //Add finger swipe event
     document.addEventListener("touchstart", handleTouchStart, false);
@@ -1114,12 +1191,24 @@ function DetectFingerSwipe() {
         if (Math.abs(xDiff) > Math.abs(yDiff)) {
             /*most significant*/
             if (xDiff > 0) {
-                /* right swipe */
-                closeSideBar();
+                /* right to left swipe */
+                if (leftSideBar.classList.contains('extended') && rightSideBar.classList.contains('collapsed')) {
+                    closeSideBar(leftSideBar);
+                }
+                else if (rightSideBar.classList.contains('collapsed') && leftSideBar.classList.contains('collapsed')) {
+                    openSideBar(rightSideBar);
+                }
+                ;
             }
             else {
-                /* left swipe */
-                openSideBar();
+                /* left to right swipe */
+                if (leftSideBar.classList.contains('collapsed') && rightSideBar.classList.contains('collapsed')) {
+                    openSideBar(leftSideBar);
+                }
+                else if (rightSideBar.classList.contains('extended') && leftSideBar.classList.contains('collapsed')) {
+                    closeSideBar(rightSideBar);
+                }
+                ;
             }
         }
         else {
@@ -1135,6 +1224,7 @@ function DetectFingerSwipe() {
         yDown = null;
     }
 }
+;
 function toggleClassListForAllChildrenOFAnElement(ev, myClass) {
     let el = ev.target;
     let haveDataLang = containerDiv.querySelectorAll('[data-lang]');
@@ -1144,6 +1234,7 @@ function toggleClassListForAllChildrenOFAnElement(ev, myClass) {
         }
     }
 }
+;
 function toggleClassList(el, myClass) {
     if (!el.classList.contains(myClass)) {
         el.classList.add(myClass);
@@ -1151,5 +1242,29 @@ function toggleClassList(el, myClass) {
     else if (el.classList.contains(myClass)) {
         el.classList.remove(myClass);
     }
+}
+;
+function buildSideBar(id) {
+    let sideBar = document.createElement('div');
+    let btnsDiv = document.createElement('div');
+    let a = document.createElement('a');
+    sideBar.id = id;
+    sideBar.classList.add(id);
+    sideBar.classList.add('sideBar');
+    sideBar.classList.add('collapsed');
+    a.innerText = '&times';
+    a.setAttribute('href', 'javascript:void(0)');
+    a.classList.add('closebtn');
+    a.addEventListener('click', () => closeSideBar(sideBar));
+    sideBar.appendChild(a);
+    btnsDiv.id = 'sideBarBtns';
+    sideBar.appendChild(btnsDiv);
+    if (id == 'leftSideBar') {
+        //leftSideBar = sideBar
+    }
+    else if (id == 'rightSideBar') {
+        //rightSideBar = sideBar
+    }
+    return sideBar;
 }
 ;
