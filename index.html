@@ -16,19 +16,7 @@
 </head>
 <body>
     <div id="visibelElements">
-        
-        <!-- The  left sidebar -->
-        <div id='leftSideBar' class="leftSideBar sideBar collapsed">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeSideBar(leftSideBar)">&times;</a>
-                <div  id="sideBarBtns"></div>
-        </div>
-
-        <!-- The  right sidebar -->
-         <div id='rightSideBar' class="rightSideBar sideBar collapsed">
-                        <a href="javascript:void(0)" class="closebtn" onclick="closeSideBar(rightSideBar)">&times;</a>
-                        <div  id="sideBarBtns"></div>
-                </div>
-        </div>
+</div>
 
         <!-- Page content -->
         <div id='content' class="Content">
@@ -64,7 +52,14 @@
                 </div>
         <!-- Main area -->
                 <div id='main'>
+                        <!-- The  left sidebar -->
+                        <div id='leftSideBar' class="leftSideBar sideBar collapsed">
+                                <a href="javascript:void(0)" class="closebtn" onclick="closeSideBar(leftSideBar)">&times;</a>
+                                <div  id="sideBarBtns"></div>
+                        </div>
+                        <!-- the button opening and closing the left side bar -->
                         <button id="opensidebar" class="openbtn" onclick='toggleSideBars()'>&#9776; Open Sidebar</button>
+                        <!-- the buttons for adding and removing a language -->
                         <div id='btns' class='btns'>                
                                 <button id='addCA' onclick='addOrRemoveLanguage(this)' class='addLang'>Add Coptic In Arabic Characters</button>
 
@@ -81,8 +76,16 @@
                                         <p>The Assembly/</p>
                                         <p>الشعب</p></button>
                         </div>
+                        <!-- the div where the inline buttons are displayed -->
                         <div id='inlineBtns' class='inlineBtns'></div>
+                        <!--The div where the text of the prayers is displayed -->
                         <div id='TargetDiv' class = 'Container'></div> 
+
+                        <!-- The  right sidebar -->
+                        <div id='rightSideBar' class="rightSideBar sideBar collapsed">
+                                <a href="javascript:void(0)" class="closebtn" onclick="closeSideBar(rightSideBar)">&times;</a>
+                                <div  id="sideBarBtns"></div>
+        </div>
                 </div>
         </div>
 

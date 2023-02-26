@@ -1146,7 +1146,7 @@ function closeDev(btn) {
 function openSideBar(sideBar) {
     //containerDiv.appendChild(sideBar);
     let btnText = String.fromCharCode(9776) + "Close Sidebar";
-    let width = "20%";
+    let width = "30%";
     sideBar.style.width = width;
     sideBar.classList.remove('collapsed');
     sideBar.classList.add('extended');

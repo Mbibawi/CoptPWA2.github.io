@@ -157,19 +157,26 @@ width: auto !important;
   background-color: #111; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
-  transition: 0.3s; /* 0.5 second transition effect to slide in the sidebar */
+  transition: 0.2s; /* 0.5 second transition effect to slide in the sidebar */
 }
-.rightSideBar {
-  background-color: #111;
+/*the right sidebar*/
+.rightSideBar { 
   align-self:auto !important;
+  right:0 !important;
 }
+/*the text of the titles shown in the right sidebar*/
 .sideTitle{
   font-style: italic;
-  color:#95190c;
+  color:white;
   font-weight: bold;
-  padding-left: 10px;
-  padding-right: 10px;
+  font-size: small;
+  padding-left: 3px;
+  padding-right: 3px;
+  margin-left: 4px;
+  margin-right: 4px;
   text-align: right;
+  background-color: darkslategray;
+  border-radius: 4px;
 }
 
 /* The sidebar links */
